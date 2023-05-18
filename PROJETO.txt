@@ -1,0 +1,47 @@
+_____________Grupo 5:_____________
+André Lomba Garcia Roza
+Gustavo Mariano Da Rosa
+Natan Da Silva Paiva
+Pedro Henrique Alves Castro
+Rodrigo De Brites Sobrinho Lisbôa
+__________________________________
+
+====================================
+| DATA DA APRESENTAÇÃO: 29/05/2023 |
+| HORÁRIO DA APRESENTAÇÃO: 18H     |
+====================================
+
+=================== PROJETO 4 (grupo 5) =================== 
+
+Sistema de gerenciamento de pedidos de compras:
+
+Um fornecedor pode ter vários pedidos de compra.
+Muitos pedidos de compra pertencem a um produto.
+Vários produtos podem ter várias categorias.
+Um produto pode ter apenas uma descrição.
+	
+Classe Fornecedor
+	nome: String
+	cnpj: String
+	listaPedidos: List<PedidoCompra>
+
+Classe Produto
+	nome: String
+	preco: Double
+	descricao: String
+	listaCategorias: List<Categoria>
+	listaItens: List<ItemPedido>
+	listaPedidos: List<PedidoCompra>
+
+Classe Categoria
+	nome: String
+	descricao: String
+	listaProdutos: List<Produto>
+
+Classe PedidoCompra
+	dataPedido: Date
+	valorTotal: Double
+	listaItens: List<ItemPedido>
+	fornecedor: Fornecedor
+
+================================================= 
