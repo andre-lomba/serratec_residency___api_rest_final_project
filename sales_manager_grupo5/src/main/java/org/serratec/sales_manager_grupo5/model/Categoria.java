@@ -1,16 +1,24 @@
 package org.serratec.sales_manager_grupo5.model;
 
-import java.util.List;
-
-import jakarta.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table
 public class Categoria {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_categoria")
     private Long id;
+    @Column
     private String nome;
+    @Column
     private String descricao;
-    private List<Produto> produtos;
 
     public Long getId() {
         return id;
@@ -34,14 +42,6 @@ public class Categoria {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public List<Produto> getProdutos() {
-        return produtos;
-    }
-
-    public void setProdutos(List<Produto> produtos) {
-        this.produtos = produtos;
     }
 
 }

@@ -11,6 +11,8 @@ __________________________________
 | HORÁRIO DA APRESENTAÇÃO: 18H     |
 ====================================
 
+URL Swagger: http://localhost:8080/swagger-ui/
+
 =================== PROJETO 4 (grupo 5) =================== 
 
 Sistema de gerenciamento de pedidos de compras:

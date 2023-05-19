@@ -1,16 +1,35 @@
 package org.serratec.sales_manager_grupo5.model;
 
-import jakarta.persistence.Entity;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "item_pedido")
 public class ItemPedido {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private Long quantidade;
+    @Column(name = "valor_unitario")
     private Double valorUnitario;
+    @Column
     private Double desconto;
+    @Column(name = "valor_total")
     private Double valorTotal;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_produto")
     private Produto produto;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_pedido")
     private Pedido pedido;
 
     public Long getId() {

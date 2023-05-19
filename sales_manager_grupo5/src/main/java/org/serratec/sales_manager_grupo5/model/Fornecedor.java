@@ -2,14 +2,27 @@ package org.serratec.sales_manager_grupo5.model;
 
 import java.util.List;
 
-import jakarta.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table
 public class Fornecedor {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_fornecedor")
     private Long id;
+    @Column
     private String nome;
+    @Column
     private String cnpj;
+    @OneToMany(mappedBy = "fornecedor")
     private List<Pedido> pedidos;
 
     public Long getId() {
