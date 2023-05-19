@@ -18,9 +18,9 @@ public class CategoriaService {
     CategoriaRepository categoriaRepository;
 
     public Categoria create(Categoria categoria) {
-        Optional<Categoria> opCategoria = categoriaRepository.findByNomeIgnoreCase(categoria.getNome());
+        Optional<Categoria> opCategoria = categoriaRepository.findByNomeIgnoreCase(categoria.getNome().trim());
         if (opCategoria.isPresent())
-            throw new EntidadeExistenteException("Categoria com o mesmo nome já registrado");
+            throw new EntidadeExistenteException("Categoria com o mesmo nome já registrada");
         return categoriaRepository.save(categoria);
     }
 
@@ -31,28 +31,26 @@ public class CategoriaService {
     public Categoria findById(Long id) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
-            throw new EntidadeNaoEncontradaException("Categoria não encontrado. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException("Categoria não encontrada. Verifique o id informado.");
         return categoriaRepository.findById(id).get();
     }
 
     public Categoria update(Long id, Categoria categoria) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
-            throw new EntidadeNaoEncontradaException("Categoria não encontrado. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException("Categoria não encontrada. Verifique o id informado.");
         Categoria categoriaBanco = opCategoria.get();
-        if (categoria.getNome() != categoriaBanco.getNome()) {
-            Optional<Categoria> opCategoriaNome = categoriaRepository.findByNomeIgnoreCase(categoria.getNome());
-            if (!opCategoriaNome.isPresent())
-                throw new EntidadeExistenteException("Categoria com o mesmo nome já registrado");
-        }
         categoria.setId(id);
+        if (!categoria.getNome().trim().toLowerCase().equals(categoriaBanco.getNome().trim().toLowerCase())) {
+            return create(categoria);
+        }
         return categoriaRepository.save(categoria);
     }
 
     public void deleteById(Long id) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
-            throw new EntidadeNaoEncontradaException("Categoria não encontrado. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException("Categoria não encontrada. Verifique o id informado.");
         categoriaRepository.deleteById(id);
     }
 

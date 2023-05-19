@@ -18,11 +18,11 @@ public class FornecedorService {
     FornecedorRepository fornecedorRepository;
 
     public Fornecedor create(Fornecedor fornecedor) {
-        Optional<Fornecedor> opFornecedor = fornecedorRepository.findByNomeIgnoreCase(fornecedor.getNome());
+        Optional<Fornecedor> opFornecedor = fornecedorRepository.findByNomeIgnoreCase(fornecedor.getNome().trim());
         if (opFornecedor.isPresent())
             throw new EntidadeExistenteException("Fornecedor com o mesmo nome já registrado");
-        Optional<Fornecedor> opFornecedorCnpj = fornecedorRepository.findByCnpjIgnoreCase(fornecedor.getCnpj());
-        if(opFornecedorCnpj.isPresent())
+        Optional<Fornecedor> opFornecedorCnpj = fornecedorRepository.findByCnpjIgnoreCase(fornecedor.getCnpj().trim());
+        if (opFornecedorCnpj.isPresent())
             throw new EntidadeExistenteException("Fornecedor com o mesmo CNPJ já registrado");
         return fornecedorRepository.save(fornecedor);
     }
@@ -43,12 +43,11 @@ public class FornecedorService {
         if (!opFornecedor.isPresent())
             throw new EntidadeNaoEncontradaException("Fornecedor não encontrado. Verifique o id informado.");
         Fornecedor fornecedorBanco = opFornecedor.get();
-        if (fornecedor.getNome() != fornecedorBanco.getNome()) {
-            Optional<Fornecedor> opFornecedorNome = fornecedorRepository.findByNomeIgnoreCase(fornecedor.getNome());
-            if (!opFornecedorNome.isPresent())
-                throw new EntidadeExistenteException("Fornecedor com o mesmo nome já registrado");
-        }
         fornecedor.setId(id);
+        if (!fornecedor.getNome().trim().toLowerCase().equals(fornecedorBanco.getNome().trim().toLowerCase())
+                && !fornecedor.getCnpj().trim().equals(fornecedorBanco.getCnpj().trim())) {
+            return create(fornecedor);
+        }
         return fornecedorRepository.save(fornecedor);
     }
 
@@ -58,5 +57,5 @@ public class FornecedorService {
             throw new EntidadeNaoEncontradaException("Fornecedor não encontrado. Verifique o id informado.");
         fornecedorRepository.deleteById(id);
     }
-    
+
 }

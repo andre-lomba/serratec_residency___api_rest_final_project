@@ -18,7 +18,7 @@ public class ProdutoService {
     ProdutoRepository produtoRepository;
 
     public Produto create(Produto produto) {
-        Optional<Produto> opProduto = produtoRepository.findByNomeIgnoreCase(produto.getNome());
+        Optional<Produto> opProduto = produtoRepository.findByNomeIgnoreCase(produto.getNome().trim());
         if (opProduto.isPresent())
             throw new EntidadeExistenteException("Produto com o mesmo nome já registrado");
         return produtoRepository.save(produto);
@@ -40,12 +40,10 @@ public class ProdutoService {
         if (!opProduto.isPresent())
             throw new EntidadeNaoEncontradaException("Produto não encontrado. Verifique o id informado.");
         Produto produtoBanco = opProduto.get();
-        if (produto.getNome() != produtoBanco.getNome()) {
-            Optional<Produto> opProdutoNome = produtoRepository.findByNomeIgnoreCase(produto.getNome());
-            if (opProdutoNome.isPresent())
-                throw new EntidadeExistenteException("Produto com o mesmo nome já registrado");
-        }
         produto.setId(id);
+        if (!produto.getNome().trim().toLowerCase().equals(produtoBanco.getNome().trim().toLowerCase())) {
+            return create(produto);
+        }
         return produtoRepository.save(produto);
     }
 
