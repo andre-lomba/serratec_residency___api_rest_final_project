@@ -11,19 +11,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ItemPedidoService {
+public class ItemPedidoService implements ICRUDService<ItemPedido, ItemPedido> {
 
     @Autowired
-    ItemPedidoRepository itemPedidoRepository;
+    private ItemPedidoRepository itemPedidoRepository;
 
-    public ItemPedido create(ItemPedido itemPedido) {
-        return itemPedidoRepository.save(itemPedido);
+    @Override
+    public ItemPedido create(ItemPedido obj) {
+        return itemPedidoRepository.save(obj);
     }
 
+    @Override
     public Page<ItemPedido> findAll(Pageable page) {
         return itemPedidoRepository.findAll(page);
     }
 
+    @Override
     public ItemPedido findById(Long id) {
         Optional<ItemPedido> opItemPedido = itemPedidoRepository.findById(id);
         if (!opItemPedido.isPresent())
@@ -31,14 +34,16 @@ public class ItemPedidoService {
         return itemPedidoRepository.findById(id).get();
     }
 
-    public ItemPedido update(Long id, ItemPedido itemPedido) {
+    @Override
+    public ItemPedido update(Long id, ItemPedido obj) {
         Optional<ItemPedido> opItemPedido = itemPedidoRepository.findById(id);
         if (!opItemPedido.isPresent())
             throw new EntidadeNaoEncontradaException("ItemPedido não encontrado. Verifique o id informado.");
-        itemPedido.setId(id);
-        return itemPedidoRepository.save(itemPedido);
+        obj.setId(id);
+        return itemPedidoRepository.save(obj);
     }
 
+    @Override
     public void deleteById(Long id) {
         Optional<ItemPedido> opItemPedido = itemPedidoRepository.findById(id);
         if (!opItemPedido.isPresent())

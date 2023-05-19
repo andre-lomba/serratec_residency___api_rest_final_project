@@ -1,7 +1,11 @@
 package org.serratec.sales_manager_grupo5.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.serratec.sales_manager_grupo5.common.ConversorDeLista;
+import org.serratec.sales_manager_grupo5.dto.CategoriaDTO;
 import org.serratec.sales_manager_grupo5.exception.EntidadeExistenteException;
 import org.serratec.sales_manager_grupo5.exception.EntidadeNaoEncontradaException;
 import org.serratec.sales_manager_grupo5.model.Categoria;
@@ -12,41 +16,52 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoriaService {
+public class CategoriaService implements ICRUDService<Categoria, CategoriaDTO> {
 
     @Autowired
-    CategoriaRepository categoriaRepository;
+    private CategoriaRepository categoriaRepository;
 
-    public Categoria create(Categoria categoria) {
-        Optional<Categoria> opCategoria = categoriaRepository.findByNomeIgnoreCase(categoria.getNome().trim());
+    @Override
+    public CategoriaDTO create(Categoria obj) {
+        Optional<Categoria> opCategoria = categoriaRepository.findByNomeIgnoreCase(obj.getNome().trim());
         if (opCategoria.isPresent())
             throw new EntidadeExistenteException("Categoria com o mesmo nome já registrada");
-        return categoriaRepository.save(categoria);
+        return new CategoriaDTO(categoriaRepository.save(obj));
     }
 
-    public Page<Categoria> findAll(Pageable page) {
-        return categoriaRepository.findAll(page);
+    @Override
+    public Page<CategoriaDTO> findAll(Pageable page) {
+        List<Categoria> categoriaList = categoriaRepository.findAll(page).getContent();
+        List<CategoriaDTO> categoriaDTOList = new ArrayList<>();
+        for (Categoria categoria : categoriaList) {
+            CategoriaDTO categoriaDTO = new CategoriaDTO(categoria);
+            categoriaDTOList.add(categoriaDTO);
+        }
+        return ConversorDeLista.convertListCategoriaDTOToPage(categoriaDTOList, page);
     }
 
-    public Categoria findById(Long id) {
+    @Override
+    public CategoriaDTO findById(Long id) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
             throw new EntidadeNaoEncontradaException("Categoria não encontrada. Verifique o id informado.");
-        return categoriaRepository.findById(id).get();
+        return new CategoriaDTO(categoriaRepository.findById(id).get());
     }
 
-    public Categoria update(Long id, Categoria categoria) {
+    @Override
+    public CategoriaDTO update(Long id, Categoria obj) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
             throw new EntidadeNaoEncontradaException("Categoria não encontrada. Verifique o id informado.");
         Categoria categoriaBanco = opCategoria.get();
-        categoria.setId(id);
-        if (!categoria.getNome().trim().toLowerCase().equals(categoriaBanco.getNome().trim().toLowerCase())) {
-            return create(categoria);
+        obj.setId(id);
+        if (!obj.getNome().trim().toLowerCase().equals(categoriaBanco.getNome().trim().toLowerCase())) {
+            return create(obj);
         }
-        return categoriaRepository.save(categoria);
+        return new CategoriaDTO(categoriaRepository.save(obj));
     }
 
+    @Override
     public void deleteById(Long id) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())

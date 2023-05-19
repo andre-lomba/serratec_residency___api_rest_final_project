@@ -2,9 +2,9 @@ package org.serratec.sales_manager_grupo5.controller;
 
 import java.net.URI;
 
-import org.serratec.sales_manager_grupo5.dto.ProdutoDTO;
-import org.serratec.sales_manager_grupo5.model.Produto;
-import org.serratec.sales_manager_grupo5.service.ProdutoService;
+import org.serratec.sales_manager_grupo5.dto.CategoriaDTO;
+import org.serratec.sales_manager_grupo5.model.Categoria;
+import org.serratec.sales_manager_grupo5.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,82 +26,81 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("/api/produtos")
-public class ProdutoController {
+@RequestMapping("/api/categorias")
+public class CategoriaController {
 
         @Autowired
-        ProdutoService produtoService;
+        CategoriaService categoriaService;
 
         @PostMapping
-        @ApiOperation(value = "Adiciona um produto", notes = "Adiciona um produto")
+        @ApiOperation(value = "Adiciona uma categoria", notes = "Adiciona uma categoria")
         @ApiResponses(value = {
-                        @ApiResponse(code = 201, message = "Cria o produto e retorna ele no corpo"),
+                        @ApiResponse(code = 201, message = "Cria a categoria e retorna ela no corpo"),
                         @ApiResponse(code = 401, message = "Erro de autenticação"),
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<ProdutoDTO> create(@RequestBody Produto produto) {
-                ProdutoDTO produtoDTO = produtoService.create(produto);
+        public ResponseEntity<CategoriaDTO> create(@RequestBody Categoria categoria) {
+                CategoriaDTO categoriaDTO = categoriaService.create(categoria);
                 URI uri = ServletUriComponentsBuilder
                                 .fromCurrentRequest()
                                 .path("/{id}")
-                                .buildAndExpand(produtoDTO.getId())
+                                .buildAndExpand(categoriaDTO.getId())
                                 .toUri();
-                return ResponseEntity.created(uri).body(produtoDTO);
+                return ResponseEntity.created(uri).body(categoriaDTO);
         }
 
         @GetMapping
-        @ApiOperation(value = "Lista 10 produtos por página", notes = "Listagem de produtos")
+        @ApiOperation(value = "Lista 10 categorias por página", notes = "Listagem de categorias")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna todos os produtos"),
+                        @ApiResponse(code = 200, message = "Retorna todas as categorias"),
                         @ApiResponse(code = 401, message = "Erro de autenticação"),
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<Page<ProdutoDTO>> findAll(
+        public ResponseEntity<Page<CategoriaDTO>> findAll(
                         @PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10, page = 0) Pageable page) {
-                return ResponseEntity.ok(produtoService.findAll(page));
+                return ResponseEntity.ok(categoriaService.findAll(page));
         }
 
         @GetMapping("/{id}")
-        @ApiOperation(value = "Busca um produto", notes = "Busca um produto por id")
+        @ApiOperation(value = "Busca uma categoria", notes = "Busca uma categoria por id")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna o produto correspondente ao id"),
+                        @ApiResponse(code = 200, message = "Retorna a categoria correspondente ao id"),
                         @ApiResponse(code = 401, message = "Erro de autenticação"),
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<ProdutoDTO> findById(@PathVariable Long id) {
-                return ResponseEntity.ok(produtoService.findById(id));
+        public ResponseEntity<CategoriaDTO> findById(@PathVariable Long id) {
+                return ResponseEntity.ok(categoriaService.findById(id));
         }
 
         @PutMapping("/{id}")
-        @ApiOperation(value = "Atualiza um produto", notes = "Atualiza um produto por id")
+        @ApiOperation(value = "Atualiza uma categoria", notes = "Atualiza uma categoria por id")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna o produto atualizado"),
+                        @ApiResponse(code = 200, message = "Retorna a categoria atualizada"),
                         @ApiResponse(code = 401, message = "Erro de autenticação"),
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<ProdutoDTO> update(@PathVariable Long id, @RequestBody Produto produtoDTO) {
-                return ResponseEntity.ok(produtoService.update(id, produtoDTO));
+        public ResponseEntity<CategoriaDTO> update(@PathVariable Long id, @RequestBody Categoria categoria) {
+                return ResponseEntity.ok(categoriaService.update(id, categoria));
         }
 
         @DeleteMapping("/{id}")
-        @ApiOperation(value = "Deleta um produto", notes = "Deleta um produto por id")
+        @ApiOperation(value = "Deleta um categoria", notes = "Deleta uma categoria por id")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Produto deletado"),
+                        @ApiResponse(code = 200, message = "Categoria deletada"),
                         @ApiResponse(code = 401, message = "Erro de autenticação"),
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
         public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-                produtoService.deleteById(id);
+                categoriaService.deleteById(id);
                 return ResponseEntity.ok().build();
         }
-
 }

@@ -1,7 +1,11 @@
 package org.serratec.sales_manager_grupo5.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.serratec.sales_manager_grupo5.common.ConversorDeLista;
+import org.serratec.sales_manager_grupo5.dto.PedidoDTO;
 import org.serratec.sales_manager_grupo5.exception.EntidadeNaoEncontradaException;
 import org.serratec.sales_manager_grupo5.model.Pedido;
 import org.serratec.sales_manager_grupo5.repository.PedidoRepository;
@@ -11,34 +15,48 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PedidoService {
+public class PedidoService implements ICRUDService<Pedido, PedidoDTO> {
 
     @Autowired
-    PedidoRepository pedidoRepository;
+    private PedidoRepository pedidoRepository;
 
-    public Pedido create(Pedido pedido) {
-        return pedidoRepository.save(pedido);
+    @Autowired
+    private ItemPedidoService itemPedidoService;
+
+    @Override
+    public PedidoDTO create(Pedido obj) {
+        return new PedidoDTO(pedidoRepository.save(obj));
     }
 
-    public Page<Pedido> findAll(Pageable page) {
-        return pedidoRepository.findAll(page);
+    @Override
+    public Page<PedidoDTO> findAll(Pageable page) {
+        List<Pedido> pedidoStream = pedidoRepository.findAll(page).getContent();
+        List<PedidoDTO> pedidosDTO = new ArrayList<>();
+        for (Pedido pedido : pedidoStream) {
+            PedidoDTO pedidoDTO = new PedidoDTO(pedido);
+            pedidosDTO.add(pedidoDTO);
+        }
+        return ConversorDeLista.convertListPedidoDTOToPage(pedidosDTO, page);
     }
 
-    public Pedido findById(Long id) {
+    @Override
+    public PedidoDTO findById(Long id) {
         Optional<Pedido> opPedido = pedidoRepository.findById(id);
         if (!opPedido.isPresent())
             throw new EntidadeNaoEncontradaException("Pedido não encontrado. Verifique o id informado.");
-        return pedidoRepository.findById(id).get();
+        return new PedidoDTO(opPedido.get());
     }
 
-    public Pedido update(Long id, Pedido pedido) {
+    @Override
+    public PedidoDTO update(Long id, Pedido obj) {
         Optional<Pedido> opPedido = pedidoRepository.findById(id);
         if (!opPedido.isPresent())
             throw new EntidadeNaoEncontradaException("Pedido não encontrado. Verifique o id informado.");
-        pedido.setId(id);
-        return pedidoRepository.save(pedido);
+        obj.setId(id);
+        return new PedidoDTO(pedidoRepository.save(obj));
     }
 
+    @Override
     public void deleteById(Long id) {
         Optional<Pedido> opPedido = pedidoRepository.findById(id);
         if (!opPedido.isPresent())

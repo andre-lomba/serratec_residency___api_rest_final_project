@@ -1,7 +1,11 @@
 package org.serratec.sales_manager_grupo5.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.serratec.sales_manager_grupo5.common.ConversorDeLista;
+import org.serratec.sales_manager_grupo5.dto.ProdutoDTO;
 import org.serratec.sales_manager_grupo5.exception.EntidadeExistenteException;
 import org.serratec.sales_manager_grupo5.exception.EntidadeNaoEncontradaException;
 import org.serratec.sales_manager_grupo5.model.Produto;
@@ -12,41 +16,52 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProdutoService {
+public class ProdutoService implements ICRUDService<Produto, ProdutoDTO> {
 
     @Autowired
-    ProdutoRepository produtoRepository;
+    private ProdutoRepository produtoRepository;
 
-    public Produto create(Produto produto) {
-        Optional<Produto> opProduto = produtoRepository.findByNomeIgnoreCase(produto.getNome().trim());
+    @Override
+    public ProdutoDTO create(Produto obj) {
+        Optional<Produto> opProduto = produtoRepository.findByNomeIgnoreCase(obj.getNome().trim());
         if (opProduto.isPresent())
             throw new EntidadeExistenteException("Produto com o mesmo nome já registrado");
-        return produtoRepository.save(produto);
+        return new ProdutoDTO(produtoRepository.save(obj));
     }
 
-    public Page<Produto> findAll(Pageable page) {
-        return produtoRepository.findAll(page);
+    @Override
+    public Page<ProdutoDTO> findAll(Pageable page) {
+        List<Produto> produtos = produtoRepository.findAll(page).getContent();
+        List<ProdutoDTO> produtosDTO = new ArrayList<>();
+        for (Produto produto : produtos) {
+            ProdutoDTO produtoDTO = new ProdutoDTO(produto);
+            produtosDTO.add(produtoDTO);
+        }
+        return ConversorDeLista.convertListProdutoDTOToPage(produtosDTO, page);
     }
 
-    public Produto findById(Long id) {
+    @Override
+    public ProdutoDTO findById(Long id) {
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
             throw new EntidadeNaoEncontradaException("Produto não encontrado. Verifique o id informado.");
-        return produtoRepository.findById(id).get();
+        return new ProdutoDTO(opProduto.get());
     }
 
-    public Produto update(Long id, Produto produto) {
+    @Override
+    public ProdutoDTO update(Long id, Produto obj) {
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
             throw new EntidadeNaoEncontradaException("Produto não encontrado. Verifique o id informado.");
         Produto produtoBanco = opProduto.get();
-        produto.setId(id);
-        if (!produto.getNome().trim().toLowerCase().equals(produtoBanco.getNome().trim().toLowerCase())) {
-            return create(produto);
+        obj.setId(id);
+        if (!obj.getNome().trim().toLowerCase().equals(produtoBanco.getNome().trim().toLowerCase())) {
+            return create(obj);
         }
-        return produtoRepository.save(produto);
+        return new ProdutoDTO(produtoRepository.save(obj));
     }
 
+    @Override
     public void deleteById(Long id) {
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
