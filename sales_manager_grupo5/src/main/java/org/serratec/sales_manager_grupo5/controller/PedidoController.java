@@ -3,7 +3,7 @@ package org.serratec.sales_manager_grupo5.controller;
 import java.net.URI;
 
 import org.serratec.sales_manager_grupo5.dto.PedidoDTO;
-import org.serratec.sales_manager_grupo5.model.Pedido;
+import org.serratec.sales_manager_grupo5.dto.PedidoInsereDTO;
 import org.serratec.sales_manager_grupo5.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,14 +33,14 @@ public class PedidoController {
         PedidoService pedidoService;
 
         @PostMapping
-        @ApiOperation(value = "Adiciona um pedido", notes = "Adiciona um pedido")
+        @ApiOperation(value = "Adiciona um pedido", notes = "Insira um pedido com os campos 'dataEmissao', 'id_fornecedor' e a lista 'produtos' - cada elemetno dessa lista deve conter 'id_produto' e 'quantidade'.")
         @ApiResponses(value = {
-                        @ApiResponse(code = 201, message = "Cria o pedido e retorna ele no corpo"),
+                        @ApiResponse(code = 201, message = "Cria o pedido e retorna ele completo no corpo"),
                         @ApiResponse(code = 401, message = "Erro de autenticação"),
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<PedidoDTO> create(@RequestBody Pedido pedido) {
+        public ResponseEntity<PedidoDTO> create(@RequestBody PedidoInsereDTO pedido) {
                 PedidoDTO pedidoDTO = pedidoService.create(pedido);
                 URI uri = ServletUriComponentsBuilder
                                 .fromCurrentRequest()
@@ -78,7 +78,7 @@ public class PedidoController {
         }
 
         @PutMapping("/{id}")
-        @ApiOperation(value = "Atualiza um pedido", notes = "Atualiza um pedido por id")
+        @ApiOperation(value = "Atualiza um pedido", notes = "Atualize um pedido com os campos 'dataEmissao', 'id_fornecedor' e a lista 'produtos' - cada elemetno dessa lista deve coter os campos 'id_produto' e 'quantidade'.")
         @ApiResponses(value = {
                         @ApiResponse(code = 200, message = "Retorna o pedido atualizado"),
                         @ApiResponse(code = 401, message = "Erro de autenticação"),
@@ -86,7 +86,7 @@ public class PedidoController {
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<PedidoDTO> update(@PathVariable Long id, @RequestBody Pedido pedido) {
+        public ResponseEntity<PedidoDTO> update(@PathVariable Long id, @RequestBody PedidoInsereDTO pedido) {
                 return ResponseEntity.ok(pedidoService.update(id, pedido));
         }
 

@@ -1,50 +1,55 @@
 package org.serratec.sales_manager_grupo5.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "item_pedido")
 public class ItemPedido {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private ItemPedidoPK id = new ItemPedidoPK();
+
     @Column
-    private Long quantidade;
+    private Double quantidade;
+
     @Column(name = "valor_unitario")
     private Double valorUnitario;
+
     @Column
     private Double desconto;
+
     @Column(name = "valor_total")
     private Double valorTotal;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_produto")
-    private Produto produto;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_pedido")
-    private Pedido pedido;
 
-    public Long getId() {
+    public ItemPedido() {
+    }
+
+    public ItemPedido(Produto produto, Pedido pedido, Double quantidade, Double valorUnitario, Double desconto,
+            Double valorTotal) {
+        this.id.setProduto(produto);
+        this.id.setPedido(pedido);
+        this.quantidade = quantidade;
+        this.valorUnitario = valorUnitario;
+        this.desconto = desconto;
+        this.valorTotal = valorTotal;
+    }
+
+    public ItemPedidoPK getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ItemPedidoPK id) {
         this.id = id;
     }
 
-    public Long getQuantidade() {
+    public Double getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Long quantidade) {
+    public void setQuantidade(Double quantidade) {
         this.quantidade = quantidade;
     }
 
@@ -70,22 +75,6 @@ public class ItemPedido {
 
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
-    }
-
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
-
-    public Pedido getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
     }
 
 }

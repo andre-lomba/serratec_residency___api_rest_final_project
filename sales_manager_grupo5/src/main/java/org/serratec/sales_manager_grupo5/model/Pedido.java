@@ -1,11 +1,13 @@
 package org.serratec.sales_manager_grupo5.model;
 
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,13 +24,17 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pedido")
     private Long id;
+
     @Column(name = "data_emissao")
     private Date dataEmissao;
+
     @Column(name = "valor_total")
     private Double valorTotal;
-    @OneToMany(mappedBy = "pedido")
-    private List<ItemPedido> itens;
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "id.pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<ItemPedido> itens = new HashSet<>();
+
+    @ManyToOne
     @JoinColumn(name = "id_fornecedor")
     private Fornecedor fornecedor;
 
@@ -56,20 +62,20 @@ public class Pedido {
         this.valorTotal = valorTotal;
     }
 
-    public List<ItemPedido> getItens() {
-        return itens;
-    }
-
-    public void setItens(List<ItemPedido> itens) {
-        this.itens = itens;
-    }
-
     public Fornecedor getFornecedor() {
         return fornecedor;
     }
 
     public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
+    }
+
+    public Set<ItemPedido> getItens() {
+        return itens;
+    }
+
+    public void setItens(Set<ItemPedido> itens) {
+        this.itens = itens;
     }
 
 }

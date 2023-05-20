@@ -3,7 +3,6 @@ package org.serratec.sales_manager_grupo5.dto;
 import java.util.List;
 
 import org.serratec.sales_manager_grupo5.model.Categoria;
-import org.serratec.sales_manager_grupo5.model.ItemPedido;
 import org.serratec.sales_manager_grupo5.model.Produto;
 
 public class ProdutoDTO {
@@ -12,7 +11,6 @@ public class ProdutoDTO {
     private String nome;
     private Double preco;
     private List<Categoria> categorias;
-    private List<ItemPedido> itens;
 
     public ProdutoDTO(Long id, String nome, Double preco) {
         this.id = id;
@@ -26,9 +24,6 @@ public class ProdutoDTO {
         this.preco = produto.getPreco();
         for (Categoria categoria : produto.getCategorias()) {
             categorias.add(categoria);
-        }
-        for (ItemPedido item : produto.getItens()) {
-            itens.add(item);
         }
     }
 
@@ -62,14 +57,6 @@ public class ProdutoDTO {
 
     public void setCategorias(List<Categoria> categorias) {
         this.categorias = categorias;
-    }
-
-    public List<ItemPedido> getItens() {
-        return itens;
-    }
-
-    public void setItens(List<ItemPedido> itens) {
-        this.itens = itens;
     }
 
 }
