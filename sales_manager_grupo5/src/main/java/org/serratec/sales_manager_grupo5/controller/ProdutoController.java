@@ -2,8 +2,8 @@ package org.serratec.sales_manager_grupo5.controller;
 
 import java.net.URI;
 
-import org.serratec.sales_manager_grupo5.dto.ProdutoDTO;
-import org.serratec.sales_manager_grupo5.model.Produto;
+import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoRequestDTO;
+import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseDTO;
 import org.serratec.sales_manager_grupo5.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,8 +40,8 @@ public class ProdutoController {
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<ProdutoDTO> create(@RequestBody Produto produto) {
-                ProdutoDTO produtoDTO = produtoService.create(produto);
+        public ResponseEntity<ProdutoResponseDTO> create(@RequestBody ProdutoRequestDTO produto) {
+                ProdutoResponseDTO produtoDTO = produtoService.create(produto);
                 URI uri = ServletUriComponentsBuilder
                                 .fromCurrentRequest()
                                 .path("/{id}")
@@ -59,7 +59,7 @@ public class ProdutoController {
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<Page<ProdutoDTO>> findAll(
+        public ResponseEntity<Page<ProdutoResponseDTO>> findAll(
                         @PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10, page = 0) Pageable page) {
                 return ResponseEntity.ok(produtoService.findAll(page));
         }
@@ -73,7 +73,7 @@ public class ProdutoController {
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<ProdutoDTO> findById(@PathVariable Long id) {
+        public ResponseEntity<ProdutoResponseDTO> findById(@PathVariable Long id) {
                 return ResponseEntity.ok(produtoService.findById(id));
         }
 
@@ -86,7 +86,8 @@ public class ProdutoController {
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<ProdutoDTO> update(@PathVariable Long id, @RequestBody Produto produtoDTO) {
+        public ResponseEntity<ProdutoResponseDTO> update(@PathVariable Long id,
+                        @RequestBody ProdutoRequestDTO produtoDTO) {
                 return ResponseEntity.ok(produtoService.update(id, produtoDTO));
         }
 

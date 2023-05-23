@@ -2,8 +2,8 @@ package org.serratec.sales_manager_grupo5.controller;
 
 import java.net.URI;
 
-import org.serratec.sales_manager_grupo5.dto.FornecedorDTO;
-import org.serratec.sales_manager_grupo5.model.Fornecedor;
+import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorRequestDTO;
+import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorResponseDTO;
 import org.serratec.sales_manager_grupo5.service.FornecedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,8 +40,8 @@ public class FornecedorController {
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<FornecedorDTO> create(@RequestBody Fornecedor fornecedor) {
-                FornecedorDTO fornecedorDTO = fornecedorService.create(fornecedor);
+        public ResponseEntity<FornecedorResponseDTO> create(@RequestBody FornecedorRequestDTO fornecedor) {
+                FornecedorResponseDTO fornecedorDTO = fornecedorService.create(fornecedor);
                 URI uri = ServletUriComponentsBuilder
                                 .fromCurrentRequest()
                                 .path("/{id}")
@@ -59,7 +59,7 @@ public class FornecedorController {
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<Page<FornecedorDTO>> findAll(
+        public ResponseEntity<Page<FornecedorResponseDTO>> findAll(
                         @PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10, page = 0) Pageable page) {
                 return ResponseEntity.ok(fornecedorService.findAll(page));
         }
@@ -73,7 +73,7 @@ public class FornecedorController {
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<FornecedorDTO> findById(@PathVariable Long id) {
+        public ResponseEntity<FornecedorResponseDTO> findById(@PathVariable Long id) {
                 return ResponseEntity.ok(fornecedorService.findById(id));
         }
 
@@ -86,7 +86,8 @@ public class FornecedorController {
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<FornecedorDTO> update(@PathVariable Long id, @RequestBody Fornecedor fornecedor) {
+        public ResponseEntity<FornecedorResponseDTO> update(@PathVariable Long id,
+                        @RequestBody FornecedorRequestDTO fornecedor) {
                 return ResponseEntity.ok(fornecedorService.update(id, fornecedor));
         }
 

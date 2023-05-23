@@ -1,16 +1,19 @@
 package org.serratec.sales_manager_grupo5.model;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -28,9 +31,12 @@ public class Produto {
     @Column
     private Double preco;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "produto_categoria", joinColumns = @JoinColumn(name = "id_produto"), inverseJoinColumns = @JoinColumn(name = "id_categoria"))
-    private List<Categoria> categorias;
+    private Set<Categoria> categorias = new HashSet<>();
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
+    private Set<ItemPedido> itens = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -56,12 +62,20 @@ public class Produto {
         this.preco = preco;
     }
 
-    public List<Categoria> getCategorias() {
+    public Set<Categoria> getCategorias() {
         return categorias;
     }
 
-    public void setCategorias(List<Categoria> categorias) {
+    public void setCategorias(Set<Categoria> categorias) {
         this.categorias = categorias;
+    }
+
+    public Set<ItemPedido> getItens() {
+        return itens;
+    }
+
+    public void setItens(Set<ItemPedido> itens) {
+        this.itens = itens;
     }
 
 }

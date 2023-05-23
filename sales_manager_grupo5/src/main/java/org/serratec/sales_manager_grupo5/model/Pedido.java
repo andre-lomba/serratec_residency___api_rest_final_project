@@ -29,9 +29,9 @@ public class Pedido {
     private Date dataEmissao;
 
     @Column(name = "valor_total")
-    private Double valorTotal;
+    private Double valorTotal = 0.0;
 
-    @OneToMany(mappedBy = "id.pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<ItemPedido> itens = new HashSet<>();
 
     @ManyToOne
