@@ -35,9 +35,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErroResposta> handleResourceBadRequestException(EntidadeNaoEncontradaException ex) {
         List<String> erros = new ArrayList<>();
         erros.add(ex.getMessage());
-        ErroResposta erro = new ErroResposta(LocalDateTime.now().toString(), 400, "Bad Request",
+        ErroResposta erro = new ErroResposta(LocalDateTime.now().toString(), 404, "Not Found",
                 erros);
-        return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(erro, HttpStatus.NOT_FOUND);
     }
 
     // -----------------------------------------------------------------------------------------

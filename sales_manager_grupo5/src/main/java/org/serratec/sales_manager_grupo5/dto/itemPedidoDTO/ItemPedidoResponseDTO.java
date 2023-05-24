@@ -1,21 +1,20 @@
 package org.serratec.sales_manager_grupo5.dto.itemPedidoDTO;
 
-import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseDTO;
+import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseReduceDTO;
 
 public class ItemPedidoResponseDTO {
 
-    private Long id;
-    private ProdutoResponseDTO produto;
+    private ProdutoResponseReduceDTO produto;
     private Integer quantidade;
     private Double valorUnitario;
     private Double desconto;
-    private Double valorTotal;
+    private Double valorTotalItem;
 
-    public ProdutoResponseDTO getProduto() {
+    public ProdutoResponseReduceDTO getProduto() {
         return produto;
     }
 
-    public void setProduto(ProdutoResponseDTO produto) {
+    public void setProduto(ProdutoResponseReduceDTO produto) {
         this.produto = produto;
     }
 
@@ -43,20 +42,12 @@ public class ItemPedidoResponseDTO {
         this.desconto = desconto;
     }
 
-    public Double getValorTotal() {
-        return valorTotal;
+    public Double getValorTotalItem() {
+        return valorTotalItem;
     }
 
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setValorTotalItem(Double valorTotalItem) {
+        this.valorTotalItem = valorTotalItem;
     }
 
 }

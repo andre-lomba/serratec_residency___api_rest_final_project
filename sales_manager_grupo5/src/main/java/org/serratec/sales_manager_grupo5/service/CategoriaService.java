@@ -26,6 +26,8 @@ public class CategoriaService implements ICRUDService<CategoriaRequestDTO, Categ
     @Autowired
     private ModelMapper mapper;
 
+    String msgerror = "Categoria não encontrada. Verifique o id informado.";
+
     @Override
     public CategoriaResponseDTO create(CategoriaRequestDTO obj) {
         obj.setId(null);
@@ -52,7 +54,7 @@ public class CategoriaService implements ICRUDService<CategoriaRequestDTO, Categ
     public CategoriaResponseDTO findById(Long id) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
-            throw new EntidadeNaoEncontradaException("Categoria não encontrada. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException(msgerror);
         return mapper.map(opCategoria.get(), CategoriaResponseDTO.class);
     }
 
@@ -60,7 +62,7 @@ public class CategoriaService implements ICRUDService<CategoriaRequestDTO, Categ
     public CategoriaResponseDTO update(Long id, CategoriaRequestDTO obj) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
-            throw new EntidadeNaoEncontradaException("Categoria não encontrada. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException(msgerror);
         Categoria categoriaBanco = opCategoria.get();
         obj.setId(id);
         if (!obj.getNome().trim().toLowerCase().equals(categoriaBanco.getNome().trim().toLowerCase())) {
@@ -76,7 +78,7 @@ public class CategoriaService implements ICRUDService<CategoriaRequestDTO, Categ
     public void deleteById(Long id) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
-            throw new EntidadeNaoEncontradaException("Categoria não encontrada. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException(msgerror);
         categoriaRepository.deleteById(id);
     }
 

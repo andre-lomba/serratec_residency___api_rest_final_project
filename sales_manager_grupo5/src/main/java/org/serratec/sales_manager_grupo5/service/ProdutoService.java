@@ -11,8 +11,11 @@ import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseDTO;
 import org.serratec.sales_manager_grupo5.exception.EntidadeExistenteException;
 import org.serratec.sales_manager_grupo5.exception.EntidadeNaoEncontradaException;
 import org.serratec.sales_manager_grupo5.model.Categoria;
+import org.serratec.sales_manager_grupo5.model.ItemPedido;
+import org.serratec.sales_manager_grupo5.model.Pedido;
 import org.serratec.sales_manager_grupo5.model.Produto;
 import org.serratec.sales_manager_grupo5.repository.CategoriaRepository;
+import org.serratec.sales_manager_grupo5.repository.PedidoRepository;
 import org.serratec.sales_manager_grupo5.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +33,11 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    String msgerror = "Produto não encontrado. Verifique o id informado.";
 
     @Override
     public ProdutoResponseDTO create(ProdutoRequestDTO obj) {
@@ -62,7 +70,7 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
     public ProdutoResponseDTO findById(Long id) {
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
-            throw new EntidadeNaoEncontradaException("Produto não encontrado. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException(msgerror);
         return mapper.map(opProduto.get(), ProdutoResponseDTO.class);
     }
 
@@ -70,7 +78,7 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
     public ProdutoResponseDTO update(Long id, ProdutoRequestDTO obj) {
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
-            throw new EntidadeNaoEncontradaException("Produto não encontrado. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException(msgerror);
         obj.setId(id);
         if (!obj.getNome().equals(opProduto.get().getNome())) {
             opProduto = produtoRepository.findByNomeIgnoreCase(obj.getNome().trim());
@@ -91,7 +99,16 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
     public void deleteById(Long id) {
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
-            throw new EntidadeNaoEncontradaException("Produto não encontrado. Verifique o id informado.");
+            throw new EntidadeNaoEncontradaException(msgerror);
+        List<Pedido> pedidos = pedidoRepository.findAll();
+        for (Pedido pedido : pedidos) {
+            for (ItemPedido item : pedido.getItens()) {
+               if(item.getProduto().getId().equals(id)){
+             String error = String.format("Exclusão não executada: Produto com id %d consta em um ou mais pedidos.", id);
+                throw new EntidadeExistenteException(error);
+               } 
+            }
+        }
         produtoRepository.deleteById(id);
     }
 
