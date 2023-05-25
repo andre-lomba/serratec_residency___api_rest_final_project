@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.serratec.sales_manager_grupo5.dto.itemPedidoDTO.ItemPedidoRequestDTO;
 
 @Entity
 @Table(name = "item_pedido")
@@ -34,12 +34,20 @@ public class ItemPedido {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_produto")
-    private Produto produto = new Produto();
+    private Produto produto;
 
     @ManyToOne
     @JoinColumn(name = "id_pedido")
-    @JsonIgnore
     private Pedido pedido = new Pedido();
+
+    public ItemPedido() {
+    }
+
+    public ItemPedido(ItemPedidoRequestDTO request) {
+        this.quantidade = request.getQuantidade();
+        this.produto = new Produto();
+        produto.setId(request.getId_produto());
+    }
 
     public Integer getQuantidade() {
         return quantidade;

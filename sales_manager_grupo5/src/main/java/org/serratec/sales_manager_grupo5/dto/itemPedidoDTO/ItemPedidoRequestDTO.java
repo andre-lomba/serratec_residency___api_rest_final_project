@@ -1,18 +1,15 @@
 package org.serratec.sales_manager_grupo5.dto.itemPedidoDTO;
 
-import org.serratec.sales_manager_grupo5.model.Produto;
+import javax.validation.constraints.NotNull;
 
 public class ItemPedidoRequestDTO {
 
-    private Produto produto;
+    @NotNull(message = "Informe o id do produto.")
+    private Long id_produto;
+    @NotNull(message = "Informe a quantidade do produto.")
     private Integer quantidade;
 
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
+    public ItemPedidoRequestDTO() {
     }
 
     public Integer getQuantidade() {
@@ -21,6 +18,14 @@ public class ItemPedidoRequestDTO {
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public Long getId_produto() {
+        return id_produto;
+    }
+
+    public void setId_produto(Long id_produto) {
+        this.id_produto = id_produto;
     }
 
 }

@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.serratec.sales_manager_grupo5.common.ConversorDeLista;
 import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorRequestDTO;
-import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorResponseDTO;
+import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorResponsePedidosDTO;
 import org.serratec.sales_manager_grupo5.exception.EntidadeExistenteException;
 import org.serratec.sales_manager_grupo5.exception.EntidadeNaoEncontradaException;
 import org.serratec.sales_manager_grupo5.model.Fornecedor;
@@ -21,13 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FornecedorService implements ICRUDService<FornecedorRequestDTO, FornecedorResponseDTO> {
+public class FornecedorService implements ICRUDService<FornecedorRequestDTO, FornecedorResponsePedidosDTO> {
 
     @Autowired
     private FornecedorRepository fornecedorRepository;
-
-    @Autowired
-    private ModelMapper mapper;
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -37,59 +33,55 @@ public class FornecedorService implements ICRUDService<FornecedorRequestDTO, For
     String msgRepeatedCNPJ = "Fornecedor com o mesmo CNPJ já registrado";
 
     @Override
-    public FornecedorResponseDTO create(FornecedorRequestDTO obj) {
-        obj.setId(null);
-        Optional<Fornecedor> opFornecedor = fornecedorRepository.findByNomeIgnoreCase(obj.getNome().trim());
+    public FornecedorResponsePedidosDTO create(FornecedorRequestDTO request) {
+        Optional<Fornecedor> opFornecedor = fornecedorRepository.findByNomeIgnoreCase(request.getNome().trim());
         if (opFornecedor.isPresent())
             throw new EntidadeExistenteException(msgRepeatedName);
         Optional<Fornecedor> opFornecedorCnpj = fornecedorRepository
-                .findByCnpjIgnoreCase(obj.getCnpj().trim());
+                .findByCnpjIgnoreCase(request.getCnpj().trim());
         if (opFornecedorCnpj.isPresent())
             throw new EntidadeExistenteException(msgRepeatedCNPJ);
-        Fornecedor fornecedor = mapper.map(obj, Fornecedor.class);
-        fornecedor = fornecedorRepository.save(fornecedor);
-        return mapper.map(fornecedor, FornecedorResponseDTO.class);
+        Fornecedor fornecedor = new Fornecedor(request);
+        return new FornecedorResponsePedidosDTO(fornecedorRepository.save(fornecedor));
     }
 
     @Override
-    public Page<FornecedorResponseDTO> findAll(Pageable page) {
+    public Page<FornecedorResponsePedidosDTO> findAll(Pageable page) {
         List<Fornecedor> fornecedorStream = fornecedorRepository.findAll(page).getContent();
-        List<FornecedorResponseDTO> fornecedorDTOList = new ArrayList<>();
+        List<FornecedorResponsePedidosDTO> fornecedorDTOList = new ArrayList<>();
         for (Fornecedor fornecedor : fornecedorStream) {
-            FornecedorResponseDTO fornecedorDTO = mapper.map(fornecedor, FornecedorResponseDTO.class);
-            fornecedorDTOList.add(fornecedorDTO);
+            fornecedorDTOList.add(new FornecedorResponsePedidosDTO(fornecedor));
         }
         return ConversorDeLista.convertListFornecedorDTOToPage(fornecedorDTOList, page);
     }
 
     @Override
-    public FornecedorResponseDTO findById(Long id) {
+    public FornecedorResponsePedidosDTO findById(Long id) {
         Optional<Fornecedor> opFornecedor = fornecedorRepository.findById(id);
         if (!opFornecedor.isPresent())
             throw new EntidadeNaoEncontradaException(msgNotFound);
-        return mapper.map(opFornecedor.get(), FornecedorResponseDTO.class);
+        return new FornecedorResponsePedidosDTO(opFornecedor.get());
     }
 
     @Override
-    public FornecedorResponseDTO update(Long id, FornecedorRequestDTO obj) {
+    public FornecedorResponsePedidosDTO update(Long id, FornecedorRequestDTO request) {
         Optional<Fornecedor> opFornecedor = fornecedorRepository.findById(id);
         if (!opFornecedor.isPresent())
             throw new EntidadeNaoEncontradaException(msgNotFound);
-        obj.setId(id);
-        if (!obj.getNome().trim().toLowerCase().equals(opFornecedor.get().getNome().trim().toLowerCase())) {
-            Optional<Fornecedor> opFornecedor2 = fornecedorRepository.findByNomeIgnoreCase(obj.getNome().trim());
+        if (!request.getNome().trim().toLowerCase().equals(opFornecedor.get().getNome().trim().toLowerCase())) {
+            Optional<Fornecedor> opFornecedor2 = fornecedorRepository.findByNomeIgnoreCase(request.getNome().trim());
             if (opFornecedor2.isPresent())
                 throw new EntidadeExistenteException(msgRepeatedName);
         }
-        if (!obj.getCnpj().trim().equals(opFornecedor.get().getCnpj().trim())) {
+        if (!request.getCnpj().trim().equals(opFornecedor.get().getCnpj().trim())) {
             opFornecedor = fornecedorRepository
-                    .findByCnpjIgnoreCase(obj.getCnpj().trim());
+                    .findByCnpjIgnoreCase(request.getCnpj().trim());
             if (opFornecedor.isPresent())
                 throw new EntidadeExistenteException(msgRepeatedCNPJ);
         }
-        Fornecedor fornecedor = mapper.map(obj, Fornecedor.class);
-        fornecedor = fornecedorRepository.save(fornecedor);
-        return mapper.map(fornecedor, FornecedorResponseDTO.class);
+        Fornecedor fornecedor = new Fornecedor(request);
+        fornecedor.setId(id);
+        return new FornecedorResponsePedidosDTO(fornecedorRepository.save(fornecedor));
     }
 
     @Override

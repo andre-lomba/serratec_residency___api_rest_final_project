@@ -1,16 +1,18 @@
 package org.serratec.sales_manager_grupo5.dto.produtoDTO;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.serratec.sales_manager_grupo5.dto.categoriaDTO.CategoriaResponseDTO;
+import org.serratec.sales_manager_grupo5.model.Produto;
 
 public class ProdutoResponseDTO {
 
     private Long id;
     private String nome;
     private Double preco;
-    private List<CategoriaResponseDTO> categorias = new ArrayList<>();
+
+    public ProdutoResponseDTO(Produto model) {
+        this.id = model.getId();
+        this.nome = model.getNome();
+        this.preco = model.getPreco();
+    }
 
     public Long getId() {
         return id;
@@ -34,14 +36,6 @@ public class ProdutoResponseDTO {
 
     public void setPreco(Double preco) {
         this.preco = preco;
-    }
-
-    public List<CategoriaResponseDTO> getCategorias() {
-        return categorias;
-    }
-
-    public void setCategorias(List<CategoriaResponseDTO> categorias) {
-        this.categorias = categorias;
     }
 
 }

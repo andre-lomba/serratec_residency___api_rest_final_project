@@ -1,10 +1,21 @@
 package org.serratec.sales_manager_grupo5.dto.categoriaDTO;
 
+import org.serratec.sales_manager_grupo5.model.Categoria;
+
 public class CategoriaResponseDTO {
 
     private Long id;
     private String nome;
     private String descricao;
+
+    public CategoriaResponseDTO() {
+    }
+
+    public CategoriaResponseDTO(Categoria model) {
+        this.id = model.getId();
+        this.nome = model.getNome();
+        this.descricao = model.getDescricao();
+    }
 
     public Long getId() {
         return id;

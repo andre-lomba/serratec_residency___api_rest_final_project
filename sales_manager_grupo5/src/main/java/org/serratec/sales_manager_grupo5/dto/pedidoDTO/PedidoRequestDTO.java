@@ -4,21 +4,29 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.serratec.sales_manager_grupo5.model.Fornecedor;
-import org.serratec.sales_manager_grupo5.model.ItemPedido;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.serratec.sales_manager_grupo5.dto.itemPedidoDTO.ItemPedidoRequestDTO;
 
 public class PedidoRequestDTO {
 
-    private Fornecedor fornecedor;
+    @NotNull(message = "Informe o id do fornecedor.")
+    private Long id_fornecedor;
+    @NotNull(message = "Informe a data de emissão do pedido.")
     private Date dataEmissao;
-    private Set<ItemPedido> itens = new HashSet<>();
+    @NotEmpty(message = "Informe os itens do pedido")
+    private Set<ItemPedidoRequestDTO> itens = new HashSet<>();
 
-    public Fornecedor getFornecedor() {
-        return fornecedor;
+    public PedidoRequestDTO() {
     }
 
-    public void setFornecedor(Fornecedor fornecedor) {
-        this.fornecedor = fornecedor;
+    public Long getId_fornecedor() {
+        return id_fornecedor;
+    }
+
+    public void setId_fornecedor(Long id_fornecedor) {
+        this.id_fornecedor = id_fornecedor;
     }
 
     public Date getDataEmissao() {
@@ -29,11 +37,11 @@ public class PedidoRequestDTO {
         this.dataEmissao = dataEmissao;
     }
 
-    public Set<ItemPedido> getItens() {
+    public Set<ItemPedidoRequestDTO> getItens() {
         return itens;
     }
 
-    public void setItens(Set<ItemPedido> itens) {
+    public void setItens(Set<ItemPedidoRequestDTO> itens) {
         this.itens = itens;
     }
 

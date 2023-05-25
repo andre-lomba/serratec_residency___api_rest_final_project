@@ -2,10 +2,10 @@ package org.serratec.sales_manager_grupo5.common;
 
 import java.util.List;
 
-import org.serratec.sales_manager_grupo5.dto.categoriaDTO.CategoriaResponseDTO;
-import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorResponseDTO;
+import org.serratec.sales_manager_grupo5.dto.categoriaDTO.CategoriaResponseProdutosDTO;
+import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorResponsePedidosDTO;
 import org.serratec.sales_manager_grupo5.dto.pedidoDTO.PedidoResponseDTO;
-import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseDTO;
+import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseCategoriasDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,11 +22,12 @@ public class ConversorDeLista {
      * @param pageable
      * @return page
      */
-    public static final Page<ProdutoResponseDTO> convertListProdutoDTOToPage(List<ProdutoResponseDTO> list,
+    public static final Page<ProdutoResponseCategoriasDTO> convertListProdutoDTOToPage(
+            List<ProdutoResponseCategoriasDTO> list,
             Pageable pageable) {
         final int start = (int) pageable.getOffset();
         final int end = Math.min((start + pageable.getPageSize()), list.size());
-        final Page<ProdutoResponseDTO> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
+        final Page<ProdutoResponseCategoriasDTO> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
         return page;
     }
 
@@ -52,11 +53,12 @@ public class ConversorDeLista {
      * @param pageable
      * @return page
      */
-    public static final Page<FornecedorResponseDTO> convertListFornecedorDTOToPage(List<FornecedorResponseDTO> list,
+    public static final Page<FornecedorResponsePedidosDTO> convertListFornecedorDTOToPage(
+            List<FornecedorResponsePedidosDTO> list,
             Pageable pageable) {
         final int start = (int) pageable.getOffset();
         final int end = Math.min((start + pageable.getPageSize()), list.size());
-        final Page<FornecedorResponseDTO> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
+        final Page<FornecedorResponsePedidosDTO> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
         return page;
     }
 
@@ -67,11 +69,12 @@ public class ConversorDeLista {
      * @param pageable
      * @return page
      */
-    public static final Page<CategoriaResponseDTO> convertListCategoriaDTOToPage(List<CategoriaResponseDTO> list,
+    public static final Page<CategoriaResponseProdutosDTO> convertListCategoriaDTOToPage(
+            List<CategoriaResponseProdutosDTO> list,
             Pageable pageable) {
         final int start = (int) pageable.getOffset();
         final int end = Math.min((start + pageable.getPageSize()), list.size());
-        final Page<CategoriaResponseDTO> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
+        final Page<CategoriaResponseProdutosDTO> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
         return page;
     }
 

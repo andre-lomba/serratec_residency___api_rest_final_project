@@ -1,8 +1,8 @@
 package org.serratec.sales_manager_grupo5.model;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,7 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import net.bytebuddy.agent.builder.AgentBuilder.PoolStrategy.Eager;
+import org.serratec.sales_manager_grupo5.dto.itemPedidoDTO.ItemPedidoRequestDTO;
+import org.serratec.sales_manager_grupo5.dto.pedidoDTO.PedidoRequestDTO;
 
 @Entity
 @Table
@@ -34,11 +35,25 @@ public class Pedido {
     private Double valorTotal = 0.0;
 
     @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<ItemPedido> itens = new HashSet<>();
+    private List<ItemPedido> itens;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_fornecedor")
     private Fornecedor fornecedor;
+
+    public Pedido() {
+    }
+
+    public Pedido(PedidoRequestDTO request) {
+        this.dataEmissao = request.getDataEmissao();
+        this.fornecedor = new Fornecedor();
+        fornecedor.setId(request.getId_fornecedor());
+        this.itens = new ArrayList<>();
+        for (ItemPedidoRequestDTO item : request.getItens()) {
+            ItemPedido itemPedido = new ItemPedido(item);
+            getItens().add(itemPedido);
+        }
+    }
 
     public Long getId() {
         return id;
@@ -72,11 +87,11 @@ public class Pedido {
         this.fornecedor = fornecedor;
     }
 
-    public Set<ItemPedido> getItens() {
+    public List<ItemPedido> getItens() {
         return itens;
     }
 
-    public void setItens(Set<ItemPedido> itens) {
+    public void setItens(List<ItemPedido> itens) {
         this.itens = itens;
     }
 

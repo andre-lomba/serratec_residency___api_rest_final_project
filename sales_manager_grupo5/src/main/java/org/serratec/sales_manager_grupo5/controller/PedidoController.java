@@ -2,6 +2,8 @@ package org.serratec.sales_manager_grupo5.controller;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.serratec.sales_manager_grupo5.dto.pedidoDTO.PedidoResponseDTO;
 import org.serratec.sales_manager_grupo5.dto.pedidoDTO.PedidoRequestDTO;
 import org.serratec.sales_manager_grupo5.service.PedidoService;
@@ -40,7 +42,7 @@ public class PedidoController {
                         @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<PedidoResponseDTO> create(@RequestBody PedidoRequestDTO pedido) {
+        public ResponseEntity<PedidoResponseDTO> create(@Valid @RequestBody PedidoRequestDTO pedido) {
                 PedidoResponseDTO pedidoDTO = pedidoService.create(pedido);
                 URI uri = ServletUriComponentsBuilder
                                 .fromCurrentRequest()
@@ -86,7 +88,8 @@ public class PedidoController {
                         @ApiResponse(code = 404, message = "Recurso não encontrado"),
                         @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
         })
-        public ResponseEntity<PedidoResponseDTO> update(@PathVariable Long id, @RequestBody PedidoRequestDTO pedido) {
+        public ResponseEntity<PedidoResponseDTO> update(@PathVariable Long id,
+                        @Valid @RequestBody PedidoRequestDTO pedido) {
                 return ResponseEntity.ok(pedidoService.update(id, pedido));
         }
 

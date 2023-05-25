@@ -1,20 +1,29 @@
 package org.serratec.sales_manager_grupo5.dto.itemPedidoDTO;
 
-import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseReduceDTO;
+import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseDTO;
+import org.serratec.sales_manager_grupo5.model.ItemPedido;
 
 public class ItemPedidoResponseDTO {
 
-    private ProdutoResponseReduceDTO produto;
+    private ProdutoResponseDTO produto;
     private Integer quantidade;
     private Double valorUnitario;
     private Double desconto;
     private Double valorTotalItem;
 
-    public ProdutoResponseReduceDTO getProduto() {
+    public ItemPedidoResponseDTO(ItemPedido model) {
+        this.produto = new ProdutoResponseDTO(model.getProduto());
+        this.quantidade = model.getQuantidade();
+        this.valorUnitario = model.getValorUnitario();
+        this.desconto = model.getDesconto();
+        this.valorTotalItem = model.getValorTotalItem();
+    }
+
+    public ProdutoResponseDTO getProduto() {
         return produto;
     }
 
-    public void setProduto(ProdutoResponseReduceDTO produto) {
+    public void setProduto(ProdutoResponseDTO produto) {
         this.produto = produto;
     }
 

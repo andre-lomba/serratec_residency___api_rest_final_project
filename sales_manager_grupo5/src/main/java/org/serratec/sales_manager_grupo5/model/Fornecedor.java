@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorRequestDTO;
+
 @Entity
 @Table
 public class Fornecedor {
@@ -25,6 +27,14 @@ public class Fornecedor {
     private String cnpj;
     @OneToMany(mappedBy = "fornecedor")
     private Set<Pedido> pedidos = new HashSet<>();
+
+    public Fornecedor() {
+    }
+
+    public Fornecedor(FornecedorRequestDTO request) {
+        this.nome = request.getNome();
+        this.cnpj = request.getCnpj();
+    }
 
     public Long getId() {
         return id;
@@ -82,7 +92,5 @@ public class Fornecedor {
             return false;
         return true;
     }
-
-    
 
 }

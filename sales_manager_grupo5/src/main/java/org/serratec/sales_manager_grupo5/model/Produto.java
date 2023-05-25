@@ -16,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoRequestDTO;
+
 @Entity
 @Table
 public class Produto {
@@ -37,6 +39,19 @@ public class Produto {
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
     private Set<ItemPedido> itens = new HashSet<>();
+
+    public Produto() {
+    }
+
+    public Produto(ProdutoRequestDTO request) {
+        this.nome = request.getNome();
+        this.preco = request.getPreco();
+        for (Long id_cat : request.getId_categorias()) {
+            Categoria categoria = new Categoria();
+            categoria.setId(id_cat);
+            this.categorias.add(categoria);
+        }
+    }
 
     public Long getId() {
         return id;

@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorResponseDTO;
 import org.serratec.sales_manager_grupo5.dto.itemPedidoDTO.ItemPedidoResponseDTO;
+import org.serratec.sales_manager_grupo5.model.ItemPedido;
+import org.serratec.sales_manager_grupo5.model.Pedido;
 
 public class PedidoResponseDTO {
 
@@ -13,7 +15,17 @@ public class PedidoResponseDTO {
     private FornecedorResponseDTO fornecedor;
     private Date dataEmissao;
     private List<ItemPedidoResponseDTO> itens = new ArrayList<>();
-    private Double valorTotal = 0.0;
+    private Double valorTotal;
+
+    public PedidoResponseDTO(Pedido model) {
+        this.id = model.getId();
+        this.fornecedor = new FornecedorResponseDTO(model.getFornecedor());
+        this.dataEmissao = model.getDataEmissao();
+        for (ItemPedido item : model.getItens()) {
+            this.itens.add(new ItemPedidoResponseDTO(item));
+        }
+        this.valorTotal = model.getValorTotal();
+    }
 
     public Long getId() {
         return id;

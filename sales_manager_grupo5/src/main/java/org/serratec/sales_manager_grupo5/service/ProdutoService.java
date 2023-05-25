@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.serratec.sales_manager_grupo5.common.ConversorDeLista;
 import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoRequestDTO;
-import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseDTO;
+import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseCategoriasDTO;
 import org.serratec.sales_manager_grupo5.exception.EntidadeExistenteException;
 import org.serratec.sales_manager_grupo5.exception.EntidadeNaoEncontradaException;
 import org.serratec.sales_manager_grupo5.model.Categoria;
@@ -23,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoResponseDTO> {
+public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoResponseCategoriasDTO> {
 
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -32,67 +31,64 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
     private CategoriaRepository categoriaRepository;
 
     @Autowired
-    private ModelMapper mapper;
-
-    @Autowired
     private PedidoRepository pedidoRepository;
 
     String msgerror = "Produto não encontrado. Verifique o id informado.";
 
     @Override
-    public ProdutoResponseDTO create(ProdutoRequestDTO obj) {
-        obj.setId(null);
-        Optional<Produto> opProduto = produtoRepository.findByNomeIgnoreCase(obj.getNome().trim());
+    public ProdutoResponseCategoriasDTO create(ProdutoRequestDTO request) {
+        Optional<Produto> opProduto = produtoRepository.findByNomeIgnoreCase(request.getNome().trim());
         if (opProduto.isPresent())
             throw new EntidadeExistenteException("Produto com o mesmo nome já registrado");
-        for (Categoria categoria : obj.getCategorias()) {
-            Optional<Categoria> opCategoria = categoriaRepository.findById(categoria.getId());
-            if (!opCategoria.isPresent())
-                throw new EntidadeNaoEncontradaException("Categoria não encontrada");
+        for (Long id_cat : request.getId_categorias()) {
+            Optional<Categoria> opCategoria = categoriaRepository.findById(id_cat);
+            if (!opCategoria.isPresent()) {
+                String catNotFoundMsg = String.format("Categoria com id %d não encontrada", id_cat);
+                throw new EntidadeNaoEncontradaException(catNotFoundMsg);
+            }
         }
-        Produto produto = mapper.map(obj, Produto.class);
-        produto = produtoRepository.save(produto);
-        return mapper.map(produto, ProdutoResponseDTO.class);
+        Produto produto = new Produto(request);
+        return new ProdutoResponseCategoriasDTO(produtoRepository.save(produto));
     }
 
     @Override
-    public Page<ProdutoResponseDTO> findAll(Pageable page) {
+    public Page<ProdutoResponseCategoriasDTO> findAll(Pageable page) {
         List<Produto> produtos = produtoRepository.findAll(page).getContent();
-        List<ProdutoResponseDTO> produtosDTO = new ArrayList<>();
+        List<ProdutoResponseCategoriasDTO> produtosDTO = new ArrayList<>();
         for (Produto produto : produtos) {
-            ProdutoResponseDTO produtoDTO = mapper.map(produto, ProdutoResponseDTO.class);
-            produtosDTO.add(produtoDTO);
+            produtosDTO.add(new ProdutoResponseCategoriasDTO(produto));
         }
         return ConversorDeLista.convertListProdutoDTOToPage(produtosDTO, page);
     }
 
     @Override
-    public ProdutoResponseDTO findById(Long id) {
+    public ProdutoResponseCategoriasDTO findById(Long id) {
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
             throw new EntidadeNaoEncontradaException(msgerror);
-        return mapper.map(opProduto.get(), ProdutoResponseDTO.class);
+        return new ProdutoResponseCategoriasDTO(opProduto.get());
     }
 
     @Override
-    public ProdutoResponseDTO update(Long id, ProdutoRequestDTO obj) {
+    public ProdutoResponseCategoriasDTO update(Long id, ProdutoRequestDTO request) {
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
             throw new EntidadeNaoEncontradaException(msgerror);
-        obj.setId(id);
-        if (!obj.getNome().equals(opProduto.get().getNome())) {
-            opProduto = produtoRepository.findByNomeIgnoreCase(obj.getNome().trim());
+        if (!request.getNome().equals(opProduto.get().getNome())) {
+            opProduto = produtoRepository.findByNomeIgnoreCase(request.getNome().trim());
             if (opProduto.isPresent())
                 throw new EntidadeExistenteException("Produto com o mesmo nome já registrado");
         }
-        for (Categoria categoria : obj.getCategorias()) {
-            Optional<Categoria> opCategoria = categoriaRepository.findById(categoria.getId());
-            if (!opCategoria.isPresent())
-                throw new EntidadeNaoEncontradaException("Categoria não encontrada");
+        for (Long id_cat : request.getId_categorias()) {
+            Optional<Categoria> opCategoria = categoriaRepository.findById(id_cat);
+            if (!opCategoria.isPresent()) {
+                String catNotFoundMsg = String.format("Categoria com id %d não encontrada", id_cat);
+                throw new EntidadeNaoEncontradaException(catNotFoundMsg);
+            }
         }
-        Produto produto = mapper.map(obj, Produto.class);
-        produto = produtoRepository.save(produto);
-        return mapper.map(produto, ProdutoResponseDTO.class);
+        Produto produto = new Produto(request);
+        produto.setId(id);
+        return new ProdutoResponseCategoriasDTO(produtoRepository.save(produto));
     }
 
     @Override
@@ -103,10 +99,11 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
         List<Pedido> pedidos = pedidoRepository.findAll();
         for (Pedido pedido : pedidos) {
             for (ItemPedido item : pedido.getItens()) {
-               if(item.getProduto().getId().equals(id)){
-             String error = String.format("Exclusão não executada: Produto com id %d consta em um ou mais pedidos.", id);
-                throw new EntidadeExistenteException(error);
-               } 
+                if (item.getProduto().getId().equals(id)) {
+                    String error = String
+                            .format("Exclusão não executada: Produto com id %d consta em um ou mais pedidos.", id);
+                    throw new EntidadeExistenteException(error);
+                }
             }
         }
         produtoRepository.deleteById(id);
