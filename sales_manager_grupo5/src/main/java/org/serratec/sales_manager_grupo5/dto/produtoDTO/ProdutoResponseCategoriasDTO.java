@@ -12,12 +12,13 @@ public class ProdutoResponseCategoriasDTO {
     private Long id;
     private String nome;
     private Double preco;
-    private List<CategoriaResponseDTO> categorias = new ArrayList<>();
+    private List<CategoriaResponseDTO> categorias;
 
     public ProdutoResponseCategoriasDTO(Produto model) {
         this.id = model.getId();
         this.nome = model.getNome();
         this.preco = model.getPreco();
+        this.categorias = new ArrayList<>();
         for (Categoria cat : model.getCategorias()) {
             this.categorias.add(new CategoriaResponseDTO(cat));
         }

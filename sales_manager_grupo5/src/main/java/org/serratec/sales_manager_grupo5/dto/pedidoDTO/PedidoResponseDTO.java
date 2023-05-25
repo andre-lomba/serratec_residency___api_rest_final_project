@@ -14,13 +14,14 @@ public class PedidoResponseDTO {
     private Long id;
     private FornecedorResponseDTO fornecedor;
     private Date dataEmissao;
-    private List<ItemPedidoResponseDTO> itens = new ArrayList<>();
+    private List<ItemPedidoResponseDTO> itens;
     private Double valorTotal;
 
     public PedidoResponseDTO(Pedido model) {
         this.id = model.getId();
         this.fornecedor = new FornecedorResponseDTO(model.getFornecedor());
         this.dataEmissao = model.getDataEmissao();
+        this.itens = new ArrayList<>();
         for (ItemPedido item : model.getItens()) {
             this.itens.add(new ItemPedidoResponseDTO(item));
         }

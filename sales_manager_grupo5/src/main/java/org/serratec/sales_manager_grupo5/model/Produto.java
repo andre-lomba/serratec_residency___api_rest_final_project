@@ -1,7 +1,7 @@
 package org.serratec.sales_manager_grupo5.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,10 +35,10 @@ public class Produto {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "produto_categoria", joinColumns = @JoinColumn(name = "id_produto"), inverseJoinColumns = @JoinColumn(name = "id_categoria"))
-    private Set<Categoria> categorias = new HashSet<>();
+    private List<Categoria> categorias;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
-    private Set<ItemPedido> itens = new HashSet<>();
+    private List<ItemPedido> itens;
 
     public Produto() {
     }
@@ -46,6 +46,7 @@ public class Produto {
     public Produto(ProdutoRequestDTO request) {
         this.nome = request.getNome();
         this.preco = request.getPreco();
+        this.categorias = new ArrayList<>();
         for (Long id_cat : request.getId_categorias()) {
             Categoria categoria = new Categoria();
             categoria.setId(id_cat);
@@ -77,19 +78,19 @@ public class Produto {
         this.preco = preco;
     }
 
-    public Set<Categoria> getCategorias() {
+    public List<Categoria> getCategorias() {
         return categorias;
     }
 
-    public void setCategorias(Set<Categoria> categorias) {
+    public void setCategorias(List<Categoria> categorias) {
         this.categorias = categorias;
     }
 
-    public Set<ItemPedido> getItens() {
+    public List<ItemPedido> getItens() {
         return itens;
     }
 
-    public void setItens(Set<ItemPedido> itens) {
+    public void setItens(List<ItemPedido> itens) {
         this.itens = itens;
     }
 

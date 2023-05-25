@@ -12,7 +12,7 @@ public class CategoriaResponseProdutosDTO {
     private Long id;
     private String nome;
     private String descricao;
-    private List<ProdutoResponseDTO> produtos = new ArrayList<>();
+    private List<ProdutoResponseDTO> produtos;
 
     public CategoriaResponseProdutosDTO() {
     }
@@ -21,6 +21,7 @@ public class CategoriaResponseProdutosDTO {
         this.id = model.getId();
         this.nome = model.getNome();
         this.descricao = model.getDescricao();
+        this.produtos = new ArrayList<>();
         for (Produto produto : model.getProdutos()) {
             ProdutoResponseDTO prod = new ProdutoResponseDTO(produto);
             this.produtos.add(prod);

@@ -1,7 +1,7 @@
 package org.serratec.sales_manager_grupo5.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +28,7 @@ public class Categoria {
     private String descricao;
 
     @ManyToMany(mappedBy = "categorias", fetch = FetchType.EAGER)
-    private Set<Produto> produtos = new HashSet<>();
+    private List<Produto> produtos;
 
     public Categoria() {
     }
@@ -36,6 +36,7 @@ public class Categoria {
     public Categoria(CategoriaRequestDTO request) {
         this.nome = request.getNome();
         this.descricao = request.getDescricao();
+        this.produtos = new ArrayList<>();
         for (Long idProd : request.getId_produtos()) {
             Produto produto = new Produto();
             produto.setId(idProd);
@@ -92,11 +93,11 @@ public class Categoria {
         return true;
     }
 
-    public Set<Produto> getProdutos() {
+    public List<Produto> getProdutos() {
         return produtos;
     }
 
-    public void setProdutos(Set<Produto> produtos) {
+    public void setProdutos(List<Produto> produtos) {
         this.produtos = produtos;
     }
 

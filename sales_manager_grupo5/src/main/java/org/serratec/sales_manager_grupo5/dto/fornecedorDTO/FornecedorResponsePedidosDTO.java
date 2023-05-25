@@ -11,12 +11,13 @@ public class FornecedorResponsePedidosDTO {
     private Long id;
     private String nome;
     private String cnpj;
-    private List<Long> id_pedidos = new ArrayList<>();
+    private List<Long> id_pedidos;
 
     public FornecedorResponsePedidosDTO(Fornecedor model) {
         this.id = model.getId();
         this.nome = model.getNome();
         this.cnpj = model.getCnpj();
+        this.id_pedidos = new ArrayList<>();
         for (Pedido pedido : model.getPedidos()) {
             this.id_pedidos.add(pedido.getId());
         }

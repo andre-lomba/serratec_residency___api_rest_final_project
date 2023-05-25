@@ -1,7 +1,6 @@
 package org.serratec.sales_manager_grupo5.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +25,7 @@ public class Fornecedor {
     @Column
     private String cnpj;
     @OneToMany(mappedBy = "fornecedor")
-    private Set<Pedido> pedidos = new HashSet<>();
+    private List<Pedido> pedidos;
 
     public Fornecedor() {
     }
@@ -60,11 +59,11 @@ public class Fornecedor {
         this.cnpj = cnpj;
     }
 
-    public Set<Pedido> getPedidos() {
+    public List<Pedido> getPedidos() {
         return pedidos;
     }
 
-    public void setPedidos(Set<Pedido> pedidos) {
+    public void setPedidos(List<Pedido> pedidos) {
         this.pedidos = pedidos;
     }
 
