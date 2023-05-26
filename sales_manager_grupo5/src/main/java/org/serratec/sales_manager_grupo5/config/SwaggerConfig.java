@@ -2,6 +2,8 @@ package org.serratec.sales_manager_grupo5.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -19,6 +21,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .ignoredParameterTypes(Pageable.class, Sort.class) // não quero essas classes na documentação
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("org.serratec.sales_manager_grupo5"))
                 .paths(PathSelectors.any())

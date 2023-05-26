@@ -1,22 +1,27 @@
 package org.serratec.sales_manager_grupo5.dto.itemPedidoDTO;
 
+import org.serratec.sales_manager_grupo5.common.Round;
 import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseDTO;
 import org.serratec.sales_manager_grupo5.model.ItemPedido;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para respostas relacionadas a ItemPedido")
 public class ItemPedidoResponseDTO {
 
     private ProdutoResponseDTO produto;
-    private Integer quantidade;
+
     private Double valorUnitario;
-    private Double desconto;
+    private Double descontoUnitario;
+    private Integer quantidade;
     private Double valorTotalItem;
 
     public ItemPedidoResponseDTO(ItemPedido model) {
         this.produto = new ProdutoResponseDTO(model.getProduto());
         this.quantidade = model.getQuantidade();
-        this.valorUnitario = model.getValorUnitario();
-        this.desconto = model.getDesconto();
-        this.valorTotalItem = model.getValorTotalItem();
+        this.valorUnitario = Round.round(model.getValorUnitario(), 2);
+        this.descontoUnitario = Round.round(model.getDesconto(), 2);
+        this.valorTotalItem = Round.round(model.getValorTotalItem(), 2);
     }
 
     public ProdutoResponseDTO getProduto() {
@@ -44,11 +49,11 @@ public class ItemPedidoResponseDTO {
     }
 
     public Double getDesconto() {
-        return desconto;
+        return descontoUnitario;
     }
 
     public void setDesconto(Double desconto) {
-        this.desconto = desconto;
+        this.descontoUnitario = desconto;
     }
 
     public Double getValorTotalItem() {

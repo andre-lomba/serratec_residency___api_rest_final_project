@@ -21,21 +21,6 @@ Um fornecedor pode ter vários pedidos de compra.
 Muitos pedidos de compra pertencem a um produto.
 Vários produtos podem ter várias categorias.
 Um produto pode ter apenas uma descrição.
-
-(
-1 fornecedor * pedidos (OneToMany)
-1 pedido * pedido_item (OneToMany)
-* produtos * categorias (ManyToMany)
-
-PedidoItem:
-id
-idProduto
-idPedido
-quantidade
-valor
-desconto
-valorTotal
-)
 	
 Classe Fornecedor
 	nome: String

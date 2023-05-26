@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModel;
+@ApiModel(description = "Classe usada para requisições por métodos POST e PUT para construção de Categoria")
 public class CategoriaRequestDTO {
 
     @NotBlank(message = "Nome deve ser preenchido")

@@ -2,6 +2,9 @@ package org.serratec.sales_manager_grupo5.dto.categoriaDTO;
 
 import org.serratec.sales_manager_grupo5.model.Categoria;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para respostas relacionadas a Categoria (sem lista de Produto)")
 public class CategoriaResponseDTO {
 
     private Long id;

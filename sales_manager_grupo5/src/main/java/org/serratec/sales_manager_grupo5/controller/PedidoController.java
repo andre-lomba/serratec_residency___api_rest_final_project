@@ -4,8 +4,8 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
-import org.serratec.sales_manager_grupo5.dto.pedidoDTO.PedidoResponseDTO;
 import org.serratec.sales_manager_grupo5.dto.pedidoDTO.PedidoRequestDTO;
+import org.serratec.sales_manager_grupo5.dto.pedidoDTO.PedidoResponseDTO;
 import org.serratec.sales_manager_grupo5.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,12 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/pedidos")
+@Api(tags = "PedidoController", description = "Endpoints relacionados a Pedido")
 public class PedidoController {
 
         @Autowired
@@ -37,10 +39,11 @@ public class PedidoController {
         @PostMapping
         @ApiOperation(value = "Adiciona um pedido", notes = "Insira um pedido com os campos 'dataEmissao', 'id_fornecedor' e a lista 'produtos' - cada elemetno dessa lista deve conter 'id_produto' e 'quantidade'.")
         @ApiResponses(value = {
-                        @ApiResponse(code = 201, message = "Cria o pedido e retorna ele completo no corpo"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 201, message = "Created"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<PedidoResponseDTO> create(@Valid @RequestBody PedidoRequestDTO pedido) {
                 PedidoResponseDTO pedidoDTO = pedidoService.create(pedido);
@@ -55,11 +58,11 @@ public class PedidoController {
         @GetMapping
         @ApiOperation(value = "Lista 10 pedidos por página", notes = "Listagem de pedidos")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna todos os pedidos"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 404, message = "Recurso não encontrado"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 200, message = "OK"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<Page<PedidoResponseDTO>> findAll(
                         @PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10, page = 0) Pageable page) {
@@ -67,26 +70,26 @@ public class PedidoController {
         }
 
         @GetMapping("/{id}")
-        @ApiOperation(value = "Busca um pedido", notes = "Busca um pedido por id")
+        @ApiOperation(value = "Busca um pedido pelo ID", notes = "Busca um pedido por id")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna o pedido correspondente ao id"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 404, message = "Recurso não encontrado"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 200, message = "OK"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<PedidoResponseDTO> findById(@PathVariable Long id) {
                 return ResponseEntity.ok(pedidoService.findById(id));
         }
 
         @PutMapping("/{id}")
-        @ApiOperation(value = "Atualiza um pedido", notes = "Atualize um pedido com os campos 'dataEmissao', 'id_fornecedor' e a lista 'produtos' - cada elemetno dessa lista deve coter os campos 'id_produto' e 'quantidade'.")
+        @ApiOperation(value = "Atualiza um pedido pelo ID", notes = "Atualize um pedido com os campos 'dataEmissao', 'id_fornecedor' e a lista 'produtos' - cada elemetno dessa lista deve coter os campos 'id_produto' e 'quantidade'.")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna o pedido atualizado"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 404, message = "Recurso não encontrado"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 200, message = "OK"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<PedidoResponseDTO> update(@PathVariable Long id,
                         @Valid @RequestBody PedidoRequestDTO pedido) {
@@ -94,13 +97,13 @@ public class PedidoController {
         }
 
         @DeleteMapping("/{id}")
-        @ApiOperation(value = "Deleta um pedido", notes = "Deleta um pedido por id")
+        @ApiOperation(value = "Deleta um pedido pelo ID", notes = "Deleta um pedido por id")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Pedido deletado"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 404, message = "Recurso não encontrado"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 200, message = "OK"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<Void> deleteById(@PathVariable Long id) {
                 pedidoService.deleteById(id);

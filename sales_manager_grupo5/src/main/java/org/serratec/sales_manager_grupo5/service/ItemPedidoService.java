@@ -26,14 +26,15 @@ public class ItemPedidoService {
             String errorMessage = String.format("Produto com o id %d não encontrado", id);
             throw new EntidadeNaoEncontradaException(errorMessage);
         }
+        itemPedido.setProduto(produto.get());
         itemPedido.setValorUnitario(produto.get().getPreco());
         if (itemPedido.getQuantidade() >= 3) {
-            itemPedido.setDesconto(0.9);
+            itemPedido.setDesconto(itemPedido.getValorUnitario() * 0.1);
         } else {
-            itemPedido.setDesconto(1.0);
+            itemPedido.setDesconto(itemPedido.getValorUnitario() * 0.0);
         }
         itemPedido.setValorTotalItem(
-                (itemPedido.getValorUnitario() * itemPedido.getQuantidade()) * itemPedido.getDesconto());
+                (itemPedido.getValorUnitario() - itemPedido.getDesconto()) * itemPedido.getQuantidade());
 
         return itemPedidoRepository.save(itemPedido);
     }

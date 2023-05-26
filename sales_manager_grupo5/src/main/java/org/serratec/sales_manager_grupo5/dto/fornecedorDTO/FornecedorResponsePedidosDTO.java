@@ -6,6 +6,9 @@ import java.util.List;
 import org.serratec.sales_manager_grupo5.model.Fornecedor;
 import org.serratec.sales_manager_grupo5.model.Pedido;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para respostas relacionadas a Fornecedor (com lista de Pedido)")
 public class FornecedorResponsePedidosDTO {
 
     private Long id;

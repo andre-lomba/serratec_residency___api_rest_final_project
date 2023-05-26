@@ -2,6 +2,9 @@ package org.serratec.sales_manager_grupo5.dto.itemPedidoDTO;
 
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para requisições por métodos POST e PUT para construção de ItemPedido dentro de Pedido")
 public class ItemPedidoRequestDTO {
 
     @NotNull(message = "Informe o id do produto.")

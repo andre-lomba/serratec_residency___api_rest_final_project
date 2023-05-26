@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModel;
+@ApiModel(description = "Classe usada para requisições por métodos POST e PUT para construção de Fornecedor")
 public class FornecedorRequestDTO {
 
     @NotBlank(message = "Nome deve ser preenchido.")

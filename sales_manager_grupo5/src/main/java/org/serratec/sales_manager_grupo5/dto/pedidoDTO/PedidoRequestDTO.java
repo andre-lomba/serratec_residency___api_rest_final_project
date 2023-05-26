@@ -9,6 +9,9 @@ import javax.validation.constraints.NotNull;
 
 import org.serratec.sales_manager_grupo5.dto.itemPedidoDTO.ItemPedidoRequestDTO;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para requisições por métodos POST e PUT para construção de Pedido")
 public class PedidoRequestDTO {
 
     @NotNull(message = "Informe o id do fornecedor.")

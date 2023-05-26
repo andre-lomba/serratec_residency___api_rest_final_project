@@ -5,7 +5,6 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.serratec.sales_manager_grupo5.dto.categoriaDTO.CategoriaRequestDTO;
-import org.serratec.sales_manager_grupo5.dto.categoriaDTO.CategoriaResponseDTO;
 import org.serratec.sales_manager_grupo5.dto.categoriaDTO.CategoriaResponseProdutosDTO;
 import org.serratec.sales_manager_grupo5.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/categorias")
+@Api(tags = "CategoriaController", description = "Endpoints relacionados a Categoria")
 public class CategoriaController {
 
         @Autowired
@@ -38,10 +39,11 @@ public class CategoriaController {
         @PostMapping
         @ApiOperation(value = "Adiciona uma categoria", notes = "Adiciona uma categoria")
         @ApiResponses(value = {
-                        @ApiResponse(code = 201, message = "Cria a categoria e retorna ela no corpo"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 201, message = "Created"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<CategoriaResponseProdutosDTO> create(@Valid @RequestBody CategoriaRequestDTO categoria) {
                 CategoriaResponseProdutosDTO categoriaDTO = categoriaService.create(categoria);
@@ -56,11 +58,11 @@ public class CategoriaController {
         @GetMapping
         @ApiOperation(value = "Lista 10 categorias por página", notes = "Listagem de categorias")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna todas as categorias"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 404, message = "Recurso não encontrado"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 200, message = "OK"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<Page<CategoriaResponseProdutosDTO>> findAll(
                         @PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10, page = 0) Pageable page) {
@@ -68,26 +70,26 @@ public class CategoriaController {
         }
 
         @GetMapping("/{id}")
-        @ApiOperation(value = "Busca uma categoria", notes = "Busca uma categoria por id")
+        @ApiOperation(value = "Busca uma categoria pelo ID", notes = "Busca uma categoria por id")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna a categoria correspondente ao id"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 404, message = "Recurso não encontrado"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 200, message = "OK"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<CategoriaResponseProdutosDTO> findById(@PathVariable Long id) {
                 return ResponseEntity.ok(categoriaService.findById(id));
         }
 
         @PutMapping("/{id}")
-        @ApiOperation(value = "Atualiza uma categoria", notes = "Atualiza uma categoria por id")
+        @ApiOperation(value = "Atualiza uma categoria pelo ID", notes = "Atualiza uma categoria por id")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Retorna a categoria atualizada"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 404, message = "Recurso não encontrado"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 200, message = "OK"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<CategoriaResponseProdutosDTO> update(@PathVariable Long id,
                         @Valid @RequestBody CategoriaRequestDTO categoria) {
@@ -95,13 +97,13 @@ public class CategoriaController {
         }
 
         @DeleteMapping("/{id}")
-        @ApiOperation(value = "Deleta um categoria", notes = "Deleta uma categoria por id")
+        @ApiOperation(value = "Deleta uma categoria pelo ID", notes = "Deleta uma categoria por id")
         @ApiResponses(value = {
-                        @ApiResponse(code = 200, message = "Categoria deletada"),
-                        @ApiResponse(code = 401, message = "Erro de autenticação"),
-                        @ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
-                        @ApiResponse(code = 404, message = "Recurso não encontrado"),
-                        @ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+                        @ApiResponse(code = 200, message = "OK"),
+                        @ApiResponse(code = 400, message = "Bad Request"),
+                        @ApiResponse(code = 401, message = "Unauthorized"),
+                        @ApiResponse(code = 403, message = "Forbidden"),
+                        @ApiResponse(code = 404, message = "Not Found"),
         })
         public ResponseEntity<Void> deleteById(@PathVariable Long id) {
                 categoriaService.deleteById(id);

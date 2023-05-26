@@ -2,6 +2,9 @@ package org.serratec.sales_manager_grupo5.dto.fornecedorDTO;
 
 import org.serratec.sales_manager_grupo5.model.Fornecedor;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para respostas relacionadas a Fornecedor (sem lista de Pedido)")
 public class FornecedorResponseDTO {
 
     private Long id;

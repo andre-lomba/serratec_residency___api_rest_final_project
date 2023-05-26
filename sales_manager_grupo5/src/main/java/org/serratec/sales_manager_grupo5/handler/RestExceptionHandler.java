@@ -7,6 +7,8 @@ import java.util.List;
 import org.serratec.sales_manager_grupo5.exception.EntidadeExistenteException;
 import org.serratec.sales_manager_grupo5.exception.EntidadeNaoEncontradaException;
 import org.serratec.sales_manager_grupo5.exception.ErroResposta;
+import org.serratec.sales_manager_grupo5.exception.UnauthorizedUserException;
+import org.serratec.sales_manager_grupo5.exception.UnmatchingPasswordException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +34,30 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
-    public ResponseEntity<ErroResposta> handleResourceBadRequestException(EntidadeNaoEncontradaException ex) {
+    public ResponseEntity<ErroResposta> handleResourceNotFoundException(EntidadeNaoEncontradaException ex) {
         List<String> erros = new ArrayList<>();
         erros.add(ex.getMessage());
         ErroResposta erro = new ErroResposta(LocalDateTime.now().toString(), 404, "Not Found",
                 erros);
         return new ResponseEntity<>(erro, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnauthorizedUserException.class)
+    public ResponseEntity<ErroResposta> handleUnauthorizedException(UnauthorizedUserException ex) {
+        List<String> erros = new ArrayList<>();
+        erros.add(ex.getMessage());
+        ErroResposta erro = new ErroResposta(LocalDateTime.now().toString(), 401, "Unauthorized",
+                erros);
+        return new ResponseEntity<>(erro, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UnmatchingPasswordException.class)
+    public ResponseEntity<ErroResposta> handleUnmatchingPasswordException(UnmatchingPasswordException ex) {
+        List<String> erros = new ArrayList<>();
+        erros.add(ex.getMessage());
+        ErroResposta erro = new ErroResposta(LocalDateTime.now().toString(), 400, "Bad Request",
+                erros);
+        return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
     }
 
     // -----------------------------------------------------------------------------------------

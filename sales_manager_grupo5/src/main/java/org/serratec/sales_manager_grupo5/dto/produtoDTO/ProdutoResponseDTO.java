@@ -1,7 +1,11 @@
 package org.serratec.sales_manager_grupo5.dto.produtoDTO;
 
+import org.serratec.sales_manager_grupo5.common.Round;
 import org.serratec.sales_manager_grupo5.model.Produto;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para respostas relacionadas a Produto (sem lista de Categoria)")
 public class ProdutoResponseDTO {
 
     private Long id;
@@ -11,7 +15,7 @@ public class ProdutoResponseDTO {
     public ProdutoResponseDTO(Produto model) {
         this.id = model.getId();
         this.nome = model.getNome();
-        this.preco = model.getPreco();
+        this.preco = Round.round(model.getPreco(), 2);
     }
 
     public Long getId() {
