@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para cadastro de Usuario por método POST")
 public class UsuarioRequestDTO {
 
     @NotBlank(message = "Preencha o campo email.")

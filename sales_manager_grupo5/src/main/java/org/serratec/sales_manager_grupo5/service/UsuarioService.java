@@ -1,7 +1,10 @@
 package org.serratec.sales_manager_grupo5.service;
 
+import java.util.Optional;
+
 import org.serratec.sales_manager_grupo5.dto.usuarioDTO.UsuarioRequestDTO;
 import org.serratec.sales_manager_grupo5.dto.usuarioDTO.UsuarioResponseDTO;
+import org.serratec.sales_manager_grupo5.exception.EntidadeExistenteException;
 import org.serratec.sales_manager_grupo5.exception.UnmatchingPasswordException;
 import org.serratec.sales_manager_grupo5.model.Usuario;
 import org.serratec.sales_manager_grupo5.repository.UsuarioRepository;
@@ -19,6 +22,10 @@ public class UsuarioService {
     private PasswordEncoder encoder;
 
     public UsuarioResponseDTO save(UsuarioRequestDTO cadastro) {
+        Optional<Usuario> opUsuario = usuarioRepository.findByEmail(cadastro.getEmail());
+        if (opUsuario.isPresent()) {
+            throw new EntidadeExistenteException("Email já cadastrado.");
+        }
         Usuario usuario = new Usuario(cadastro);
         if (!cadastro.getPassword().equals(cadastro.getConfirmPassword())) {
             throw new UnmatchingPasswordException("confirmPassword deve ser igual ao password.");

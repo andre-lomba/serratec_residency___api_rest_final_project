@@ -2,6 +2,9 @@ package org.serratec.sales_manager_grupo5.dto.usuarioDTO;
 
 import org.serratec.sales_manager_grupo5.model.Usuario;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Classe usada para retornar informações do cadastro de Usuario.")
 public class UsuarioResponseDTO {
 
     private Long id;

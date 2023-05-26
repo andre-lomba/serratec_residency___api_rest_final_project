@@ -1,7 +1,7 @@
 package org.serratec.sales_manager_grupo5.dto.produtoDTO;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +17,7 @@ public class ProdutoRequestDTO {
     private String nome;
     @NotNull(message = "Informe um preço para o produto.")
     private Double preco;
-    private Set<Long> id_categorias = new HashSet<>();
+    private List<Long> id_categorias = new ArrayList<>();
 
     public ProdutoRequestDTO() {
     }
@@ -38,11 +38,11 @@ public class ProdutoRequestDTO {
         this.preco = preco;
     }
 
-    public Set<Long> getId_categorias() {
+    public List<Long> getId_categorias() {
         return id_categorias;
     }
 
-    public void setId_categorias(Set<Long> id_categorias) {
+    public void setId_categorias(List<Long> id_categorias) {
         this.id_categorias = id_categorias;
     }
 

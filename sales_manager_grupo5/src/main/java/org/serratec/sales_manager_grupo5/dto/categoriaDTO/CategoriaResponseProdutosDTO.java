@@ -27,7 +27,7 @@ public class CategoriaResponseProdutosDTO {
         this.produtos = new ArrayList<>();
         for (Produto produto : model.getProdutos()) {
             ProdutoResponseDTO prod = new ProdutoResponseDTO(produto);
-            this.produtos.add(prod);
+            getProdutos().add(prod);
         }
     }
 

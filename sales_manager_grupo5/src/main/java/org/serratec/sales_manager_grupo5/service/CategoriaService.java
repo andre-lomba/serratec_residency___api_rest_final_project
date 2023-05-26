@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.serratec.sales_manager_grupo5.common.ConversorDeLista;
 import org.serratec.sales_manager_grupo5.dto.categoriaDTO.CategoriaRequestDTO;
 import org.serratec.sales_manager_grupo5.dto.categoriaDTO.CategoriaResponseProdutosDTO;
@@ -29,20 +31,25 @@ public class CategoriaService implements ICRUDService<CategoriaRequestDTO, Categ
 
     String msgerror = "Categoria não encontrada. Verifique o id informado.";
 
+    @Transactional
     @Override
     public CategoriaResponseProdutosDTO create(CategoriaRequestDTO request) {
         Optional<Categoria> opCategoria = categoriaRepository.findByNomeIgnoreCase(request.getNome().trim());
         if (opCategoria.isPresent())
             throw new EntidadeExistenteException("Categoria com o mesmo nome já registrada");
-        for (Long id_prod : request.getId_produtos()) {
-            Optional<Produto> opProduto = produtoRepository.findById(id_prod);
+        Categoria categoria = new Categoria(request);
+        categoria = categoriaRepository.save(categoria);
+        for (Long id_produto : request.getId_produtos()) {
+            Optional<Produto> opProduto = produtoRepository.findById(id_produto);
             if (!opProduto.isPresent()) {
-                String prodNotFoundMsg = String.format("Produto com id %d não encontrado", id_prod);
-                throw new EntidadeNaoEncontradaException(prodNotFoundMsg);
+                String msgProd = String.format("Produto com id %d não encontrado.", id_produto);
+                throw new EntidadeNaoEncontradaException(msgProd);
             }
+            opProduto.get().getCategorias().add(categoria);
+            Produto produto = produtoRepository.save(opProduto.get());
+            categoria.getProdutos().add(produto);
         }
-        Categoria categoria = categoriaRepository.save(new Categoria(request));
-        return new CategoriaResponseProdutosDTO(categoria);
+        return new CategoriaResponseProdutosDTO(categoriaRepository.save(categoria));
     }
 
     @Override
@@ -63,6 +70,7 @@ public class CategoriaService implements ICRUDService<CategoriaRequestDTO, Categ
         return new CategoriaResponseProdutosDTO(opCategoria.get());
     }
 
+    @Transactional
     @Override
     public CategoriaResponseProdutosDTO update(Long id, CategoriaRequestDTO request) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
@@ -73,16 +81,35 @@ public class CategoriaService implements ICRUDService<CategoriaRequestDTO, Categ
             if (opCategoria.isPresent())
                 throw new EntidadeExistenteException("Categoria com o mesmo nome já registrada");
         }
+        for (Produto produto : opCategoria.get().getProdutos()) {
+            produto.getCategorias().remove(opCategoria.get());
+            produtoRepository.save(produto);
+        }
         Categoria categoria = new Categoria(request);
         categoria.setId(id);
+        for (Long id_produto : request.getId_produtos()) {
+            Optional<Produto> opProduto = produtoRepository.findById(id_produto);
+            if (!opProduto.isPresent()) {
+                String msgProd = String.format("Produto com id %d não encontrado.", id_produto);
+                throw new EntidadeNaoEncontradaException(msgProd);
+            }
+            opProduto.get().getCategorias().add(categoria);
+            Produto produto = produtoRepository.save(opProduto.get());
+            categoria.getProdutos().add(produto);
+        }
         return new CategoriaResponseProdutosDTO(categoriaRepository.save(categoria));
     }
 
+    @Transactional
     @Override
     public void deleteById(Long id) {
         Optional<Categoria> opCategoria = categoriaRepository.findById(id);
         if (!opCategoria.isPresent())
             throw new EntidadeNaoEncontradaException(msgerror);
+        for (Produto produto : opCategoria.get().getProdutos()) {
+            produto.getCategorias().remove(opCategoria.get());
+            produtoRepository.save(produto);
+        }
         categoriaRepository.deleteById(id);
     }
 

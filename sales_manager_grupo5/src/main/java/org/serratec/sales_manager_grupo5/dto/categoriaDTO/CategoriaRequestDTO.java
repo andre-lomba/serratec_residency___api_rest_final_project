@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModel;
+
 @ApiModel(description = "Classe usada para requisições por métodos POST e PUT para construção de Categoria")
 public class CategoriaRequestDTO {
 
@@ -15,6 +16,7 @@ public class CategoriaRequestDTO {
     private String nome;
     @Size(max = 200, message = "Descrição deve ter no méximo {max} caracteres")
     private String descricao;
+
     private List<Long> id_produtos = new ArrayList<>();
 
     public CategoriaRequestDTO() {

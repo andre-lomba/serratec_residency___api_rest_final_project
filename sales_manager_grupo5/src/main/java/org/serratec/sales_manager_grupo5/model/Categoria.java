@@ -3,9 +3,9 @@ package org.serratec.sales_manager_grupo5.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,8 +27,8 @@ public class Categoria {
     @Column
     private String descricao;
 
-    @ManyToMany(mappedBy = "categorias", fetch = FetchType.EAGER)
-    private List<Produto> produtos;
+    @ManyToMany(mappedBy = "categorias", cascade = CascadeType.DETACH)
+    private List<Produto> produtos = new ArrayList<>();
 
     public Categoria() {
     }
@@ -36,12 +36,6 @@ public class Categoria {
     public Categoria(CategoriaRequestDTO request) {
         this.nome = request.getNome();
         this.descricao = request.getDescricao();
-        this.produtos = new ArrayList<>();
-        for (Long idProd : request.getId_produtos()) {
-            Produto produto = new Produto();
-            produto.setId(idProd);
-            this.produtos.add(produto);
-        }
     }
 
     public Long getId() {

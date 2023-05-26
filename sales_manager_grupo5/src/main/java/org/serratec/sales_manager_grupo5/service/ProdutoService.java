@@ -10,11 +10,8 @@ import org.serratec.sales_manager_grupo5.dto.produtoDTO.ProdutoResponseCategoria
 import org.serratec.sales_manager_grupo5.exception.EntidadeExistenteException;
 import org.serratec.sales_manager_grupo5.exception.EntidadeNaoEncontradaException;
 import org.serratec.sales_manager_grupo5.model.Categoria;
-import org.serratec.sales_manager_grupo5.model.ItemPedido;
-import org.serratec.sales_manager_grupo5.model.Pedido;
 import org.serratec.sales_manager_grupo5.model.Produto;
 import org.serratec.sales_manager_grupo5.repository.CategoriaRepository;
-import org.serratec.sales_manager_grupo5.repository.PedidoRepository;
 import org.serratec.sales_manager_grupo5.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,9 +27,6 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    @Autowired
-    private PedidoRepository pedidoRepository;
-
     String msgerror = "Produto não encontrado. Verifique o id informado.";
 
     @Override
@@ -40,14 +34,15 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
         Optional<Produto> opProduto = produtoRepository.findByNomeIgnoreCase(request.getNome().trim());
         if (opProduto.isPresent())
             throw new EntidadeExistenteException("Produto com o mesmo nome já registrado");
+        Produto produto = new Produto(request);
         for (Long id_cat : request.getId_categorias()) {
             Optional<Categoria> opCategoria = categoriaRepository.findById(id_cat);
             if (!opCategoria.isPresent()) {
                 String catNotFoundMsg = String.format("Categoria com id %d não encontrada", id_cat);
                 throw new EntidadeNaoEncontradaException(catNotFoundMsg);
             }
+            produto.getCategorias().add(opCategoria.get());
         }
-        Produto produto = new Produto(request);
         return new ProdutoResponseCategoriasDTO(produtoRepository.save(produto));
     }
 
@@ -79,15 +74,17 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
             if (opProduto.isPresent())
                 throw new EntidadeExistenteException("Produto com o mesmo nome já registrado");
         }
+        Produto produto = new Produto(request);
+        produto.setId(id);
         for (Long id_cat : request.getId_categorias()) {
             Optional<Categoria> opCategoria = categoriaRepository.findById(id_cat);
             if (!opCategoria.isPresent()) {
                 String catNotFoundMsg = String.format("Categoria com id %d não encontrada", id_cat);
                 throw new EntidadeNaoEncontradaException(catNotFoundMsg);
             }
+            produto.getCategorias().add(opCategoria.get());
         }
-        Produto produto = new Produto(request);
-        produto.setId(id);
+
         return new ProdutoResponseCategoriasDTO(produtoRepository.save(produto));
     }
 
@@ -96,15 +93,10 @@ public class ProdutoService implements ICRUDService<ProdutoRequestDTO, ProdutoRe
         Optional<Produto> opProduto = produtoRepository.findById(id);
         if (!opProduto.isPresent())
             throw new EntidadeNaoEncontradaException(msgerror);
-        List<Pedido> pedidos = pedidoRepository.findAll();
-        for (Pedido pedido : pedidos) {
-            for (ItemPedido item : pedido.getItens()) {
-                if (item.getProduto().getId().equals(id)) {
-                    String error = String
-                            .format("Exclusão não executada: Produto com id %d consta em um ou mais pedidos.", id);
-                    throw new EntidadeExistenteException(error);
-                }
-            }
+        if (!opProduto.get().getItens().isEmpty()) {
+            String error = String
+                    .format("Exclusão não executada: Produto com id %d consta em um ou mais pedidos.", id);
+            throw new EntidadeExistenteException(error);
         }
         produtoRepository.deleteById(id);
     }

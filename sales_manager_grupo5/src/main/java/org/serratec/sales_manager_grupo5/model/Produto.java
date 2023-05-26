@@ -33,9 +33,9 @@ public class Produto {
     @Column
     private Double preco;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinTable(name = "produto_categoria", joinColumns = @JoinColumn(name = "id_produto"), inverseJoinColumns = @JoinColumn(name = "id_categoria"))
-    private List<Categoria> categorias;
+    private List<Categoria> categorias = new ArrayList<>();
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
     private List<ItemPedido> itens;
@@ -46,12 +46,6 @@ public class Produto {
     public Produto(ProdutoRequestDTO request) {
         this.nome = request.getNome();
         this.preco = request.getPreco();
-        this.categorias = new ArrayList<>();
-        for (Long id_cat : request.getId_categorias()) {
-            Categoria categoria = new Categoria();
-            categoria.setId(id_cat);
-            this.categorias.add(categoria);
-        }
     }
 
     public Long getId() {
