@@ -1,5 +1,6 @@
 package org.serratec.sales_manager_grupo5.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Pedido {
     private Long id;
 
     @Column(name = "data_emissao")
-    private Date dataEmissao;
+    private LocalDateTime dataEmissao;
 
     @Column(name = "valor_total")
     private Double valorTotal = 0.0;
@@ -45,7 +46,6 @@ public class Pedido {
     }
 
     public Pedido(PedidoRequestDTO request) {
-        this.dataEmissao = request.getDataEmissao();
         this.fornecedor = new Fornecedor();
         fornecedor.setId(request.getId_fornecedor());
         this.itens = new ArrayList<>();
@@ -63,11 +63,11 @@ public class Pedido {
         this.id = id;
     }
 
-    public Date getDataEmissao() {
+    public LocalDateTime getDataEmissao() {
         return dataEmissao;
     }
 
-    public void setDataEmissao(Date dataEmissao) {
+    public void setDataEmissao(LocalDateTime dataEmissao) {
         this.dataEmissao = dataEmissao;
     }
 

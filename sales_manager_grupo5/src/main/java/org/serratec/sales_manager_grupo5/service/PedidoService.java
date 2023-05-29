@@ -1,5 +1,6 @@
 package org.serratec.sales_manager_grupo5.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class PedidoService implements ICRUDService<PedidoRequestDTO, PedidoRespo
         Long id = pedido.getId();
         pedido = new Pedido(request);
         pedido.setId(id);
+        pedido.setDataEmissao(LocalDateTime.now());
         Double valorTotal = 0.0;
         for (ItemPedido itemPedido : pedido.getItens()) {
             itemPedido.setPedido(pedido);
@@ -92,6 +94,7 @@ public class PedidoService implements ICRUDService<PedidoRequestDTO, PedidoRespo
         }
         Pedido pedido = new Pedido(request);
         pedido.setId(id);
+        pedido.setDataEmissao(LocalDateTime.now());
         Double valorTotal = 0.0;
         for (ItemPedido itemPedido : pedido.getItens()) {
             itemPedido = itemPedidoService.create(itemPedido);

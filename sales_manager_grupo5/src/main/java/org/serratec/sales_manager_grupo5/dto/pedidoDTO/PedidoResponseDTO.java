@@ -1,9 +1,11 @@
 package org.serratec.sales_manager_grupo5.dto.pedidoDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.serratec.sales_manager_grupo5.common.DateFormatter;
 import org.serratec.sales_manager_grupo5.common.Round;
 import org.serratec.sales_manager_grupo5.dto.fornecedorDTO.FornecedorResponseDTO;
 import org.serratec.sales_manager_grupo5.dto.itemPedidoDTO.ItemPedidoResponseDTO;
@@ -17,7 +19,7 @@ public class PedidoResponseDTO {
 
     private Long id;
     private FornecedorResponseDTO fornecedor;
-    private Date dataEmissao;
+    private String dataEmissao;
     private List<ItemPedidoResponseDTO> itens;
     private Double valorItens = 0.0;
     private Double descontoTotal = 0.0;
@@ -26,7 +28,7 @@ public class PedidoResponseDTO {
     public PedidoResponseDTO(Pedido model) {
         this.id = model.getId();
         this.fornecedor = new FornecedorResponseDTO(model.getFornecedor());
-        this.dataEmissao = model.getDataEmissao();
+        this.dataEmissao = DateFormatter.dateFormat(model.getDataEmissao());
         this.itens = new ArrayList<>();
         for (ItemPedido item : model.getItens()) {
             this.itens.add(new ItemPedidoResponseDTO(item));
@@ -54,11 +56,11 @@ public class PedidoResponseDTO {
         this.fornecedor = fornecedor;
     }
 
-    public Date getDataEmissao() {
+    public String getDataEmissao() {
         return dataEmissao;
     }
 
-    public void setDataEmissao(Date dataEmissao) {
+    public void setDataEmissao(String dataEmissao) {
         this.dataEmissao = dataEmissao;
     }
 

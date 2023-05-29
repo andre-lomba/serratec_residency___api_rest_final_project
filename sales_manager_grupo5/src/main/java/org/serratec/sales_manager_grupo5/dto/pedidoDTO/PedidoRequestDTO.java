@@ -1,6 +1,5 @@
 package org.serratec.sales_manager_grupo5.dto.pedidoDTO;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +15,6 @@ public class PedidoRequestDTO {
 
     @NotNull(message = "Informe o id do fornecedor.")
     private Long id_fornecedor;
-    @NotNull(message = "Informe a data de emissão do pedido.")
-    private Date dataEmissao;
     @NotEmpty(message = "Informe os itens do pedido")
     private Set<ItemPedidoRequestDTO> itens = new HashSet<>();
 
@@ -30,14 +27,6 @@ public class PedidoRequestDTO {
 
     public void setId_fornecedor(Long id_fornecedor) {
         this.id_fornecedor = id_fornecedor;
-    }
-
-    public Date getDataEmissao() {
-        return dataEmissao;
-    }
-
-    public void setDataEmissao(Date dataEmissao) {
-        this.dataEmissao = dataEmissao;
     }
 
     public Set<ItemPedidoRequestDTO> getItens() {

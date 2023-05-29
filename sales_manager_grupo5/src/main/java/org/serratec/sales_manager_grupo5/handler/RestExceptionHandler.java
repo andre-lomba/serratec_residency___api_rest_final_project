@@ -60,6 +60,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErroResposta> handleRuntimeException(RuntimeException ex) {
+        List<String> erros = new ArrayList<>();
+        erros.add(ex.getMessage());
+        ErroResposta erro = new ErroResposta(LocalDateTime.now().toString(), 400, "Bad Request",
+                erros);
+        return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
+    }
+
     // -----------------------------------------------------------------------------------------
 
     @Override
